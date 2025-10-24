@@ -1033,6 +1033,11 @@
         </div>
     </footer>
 
+    <!-- ========== BACKEND INTEGRATION ========== -->
+    <script src="backend/database.js"></script>
+    <script src="backend/operations.js"></script>
+    <!-- ========== END BACKEND ========== -->
+
     <script>
         // Cart functionality
         let cart = [];
@@ -1070,6 +1075,9 @@
                     addToCart(productId);
                 });
             });
+            
+            // Load products from backend
+            loadProductsFromBackend();
             
             // Responsive adjustments
             handleResize();
@@ -1111,10 +1119,4 @@
             const searchButton = document.getElementById('searchButton');
             
             // Search on button click
-            searchButton.addEventListener('click', performSearch);
-            
-            // Search on Enter key press
-            searchInput.addEventListener('keyup', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
-               
+            searchButton
