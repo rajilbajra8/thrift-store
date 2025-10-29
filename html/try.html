@@ -475,6 +475,37 @@
             color: #e53935;
         }
         
+        /* Button Styles */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #21867a;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #d65a3c;
+            transform: translateY(-1px);
+        }
+        
         /* Login Modal */
         .login-modal {
             position: fixed;
@@ -752,7 +783,6 @@
                     <li><a href="#" class="nav-link" data-section="products"><i class="fas fa-tshirt"></i> Products</a></li>
                     <li><a href="#" class="nav-link" data-section="categories"><i class="fas fa-tags"></i> Categories</a></li>
                     <li><a href="#" class="nav-link" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="#" class="nav-link" data-section="inventory"><i class="fas fa-box"></i> Inventory</a></li>
                 </ul>
             </div>
         </nav>
@@ -783,6 +813,95 @@
             </form>
         </div>
     </div>
+
+    <!-- Add Product Modal -->
+    <div class="login-modal" id="addProductModal">
+        <div class="login-form">
+            <div class="login-header">
+                <h2>Add New Product</h2>
+                <button class="close-login" id="closeAddProduct">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" class="form-control" placeholder="Enter product name" required>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Price (Rs)</label>
+                    <input type="number" id="productPrice" class="form-control" placeholder="Enter price" required>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Category</label>
+                    <select id="productCategory" class="form-control" required>
+                        <option value="">Select Category</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Shoes">Shoes</option>
+                        <option value="Accessories">Accessories</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productStock">Stock Quantity</label>
+                    <input type="number" id="productStock" class="form-control" placeholder="Enter stock quantity" required>
+                </div>
+                <div class="form-group">
+                    <label for="productImage">Image URL</label>
+                    <input type="url" id="productImage" class="form-control" placeholder="Enter image URL" required>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" class="form-control" placeholder="Enter product description" rows="3"></textarea>
+                </div>
+                <button type="submit" class="login-submit">Add Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div class="login-modal" id="editProductModal">
+        <div class="login-form">
+            <div class="login-header">
+                <h2>Edit Product</h2>
+                <button class="close-login" id="closeEditProduct">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="editProductForm">
+                <input type="hidden" id="editProductId">
+                <div class="form-group">
+                    <label for="editProductName">Product Name</label>
+                    <input type="text" id="editProductName" class="form-control" placeholder="Enter product name" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductPrice">Price (Rs)</label>
+                    <input type="number" id="editProductPrice" class="form-control" placeholder="Enter price" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductCategory">Category</label>
+                    <select id="editProductCategory" class="form-control" required>
+                        <option value="">Select Category</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Shoes">Shoes</option>
+                        <option value="Accessories">Accessories</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editProductStock">Stock Quantity</label>
+                    <input type="number" id="editProductStock" class="form-control" placeholder="Enter stock quantity" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductImage">Image URL</label>
+                    <input type="url" id="editProductImage" class="form-control" placeholder="Enter image URL" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductDescription">Description</label>
+                    <textarea id="editProductDescription" class="form-control" placeholder="Enter product description" rows="3"></textarea>
+                </div>
+                <button type="submit" class="login-submit">Update Product</button>
+            </form>
+        </div>
+    </div>
     
     <!-- Hero Section -->
     <section class="hero" id="home-section">
@@ -809,7 +928,7 @@
                 
                 <h3>Quick Actions</h3>
                 <ul class="sidebar-menu">
-                    <li><a href="#"><i class="fas fa-plus"></i> Add Product</a></li>
+                    <li><a href="#" id="addProductBtn"><i class="fas fa-plus"></i> Add Product</a></li>
                     <li><a href="#"><i class="fas fa-tags"></i> Manage Categories</a></li>
                     <li><a href="#"><i class="fas fa-file-invoice"></i> Generate Report</a></li>
                 </ul>
@@ -852,6 +971,26 @@
                         <a href="#" class="cta-btn">View Detailed Reports</a>
                     </div>
                 </div>
+                
+                <!-- Inventory Management Section -->
+                <h2 class="section-title" style="margin-top: 40px;">Inventory Management</h2>
+                
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Inventory items will be populated by JavaScript -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
@@ -861,42 +1000,7 @@
         <h2 class="section-title">Featured Items</h2>
         
         <div class="products" id="productsContainer">
-            <!-- Original Featured Products -->
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="Denim Jacket" class="product-img">
-                <div class="product-info">
-                    <h3 class="product-title">Vintage Denim Jacket</h3>
-                    <p class="product-price">Rs 2,499</p>
-                    <button class="buy-btn" data-id="1">Add to Cart</button>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Sneakers" class="product-img">
-                <div class="product-info">
-                    <h3 class="product-title">Classic White Sneakers</h3>
-                    <p class="product-price">Rs 2,999</p>
-                    <button class="buy-btn" data-id="2">Add to Cart</button>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80" alt="Summer Dress" class="product-img">
-                <div class="product-info">
-                    <h3 class="product-title">Floral Summer Dress</h3>
-                    <p class="product-price">Rs 1,999</p>
-                    <button class="buy-btn" data-id="3">Add to Cart</button>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80" alt="Leather Boots" class="product-img">
-                <div class="product-info">
-                    <h3 class="product-title">Leather Ankle Boots</h3>
-                    <p class="product-price">Rs 3,499</p>
-                    <button class="buy-btn" data-id="4">Add to Cart</button>
-                </div>
-            </div>
+            <!-- Products will be dynamically loaded here -->
         </div>
     </section>
     
@@ -923,74 +1027,6 @@
         </div>
     </section>
     
-    <!-- Inventory Management Section - Hidden by default -->
-    <section class="container" id="inventory-section" style="display: none;">
-        <h2 class="section-title">Inventory Management</h2>
-        
-        <table class="inventory-table">
-            <thead>
-                <tr>
-                    <th>Product ID</th>
-                    <th>Product Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>#TV001</td>
-                    <td>Vintage Denim Jacket</td>
-                    <td>Clothing</td>
-                    <td>Rs 2,499</td>
-                    <td>15</td>
-                    <td><span class="status in-stock">In Stock</span></td>
-                    <td>
-                        <button class="btn btn-primary">Edit</button>
-                        <button class="btn btn-secondary">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>#TV002</td>
-                    <td>Classic White Sneakers</td>
-                    <td>Shoes</td>
-                    <td>Rs 2,999</td>
-                    <td>8</td>
-                    <td><span class="status in-stock">In Stock</span></td>
-                    <td>
-                        <button class="btn btn-primary">Edit</button>
-                        <button class="btn btn-secondary">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>#TV003</td>
-                    <td>Floral Summer Dress</td>
-                    <td>Clothing</td>
-                    <td>Rs 1,999</td>
-                    <td>3</td>
-                    <td><span class="status low-stock">Low Stock</span></td>
-                    <td>
-                        <button class="btn btn-primary">Edit</button>
-                        <button class="btn btn-secondary">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>#TV004</td>
-                    <td>Leather Ankle Boots</td>
-                    <td>Shoes</td>
-                    <td>Rs 3,499</td>
-                    <td>0</td>
-                    <td><span class="status out-of-stock">Out of Stock</span></td>
-                    <td>
-                        <button class="btn btn-primary">Edit</button>
-                        <button class="btn btn-secondary">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
     
     <!-- Footer -->
     <footer>
@@ -1033,9 +1069,17 @@
         </div>
     </footer>
 
+    <!-- ========== BACKEND INTEGRATION ========== -->
+    <script src="backend/database.js"></script>
+    <script src="backend/operations.js"></script>
+    <!-- ========== END BACKEND ========== -->
+
     <script>
         // Cart functionality
         let cart = [];
+        let products = []; // Product database
+        let nextProductId = 7; // Starting ID for new products
+        
         const cartCount = document.getElementById('cartCount');
         const buyButtons = document.querySelectorAll('.buy-btn');
         const loginButton = document.getElementById('loginButton');
@@ -1044,6 +1088,15 @@
         const loginForm = document.getElementById('loginForm');
         const navLinks = document.querySelectorAll('.nav-link');
         const sections = document.querySelectorAll('section');
+        
+        // CRUD Modal elements
+        const addProductModal = document.getElementById('addProductModal');
+        const editProductModal = document.getElementById('editProductModal');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const closeAddProduct = document.getElementById('closeAddProduct');
+        const closeEditProduct = document.getElementById('closeEditProduct');
+        const addProductForm = document.getElementById('addProductForm');
+        const editProductForm = document.getElementById('editProductForm');
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
@@ -1063,18 +1116,496 @@
             // Setup login functionality
             setupLogin();
             
-            // Add event listeners to buy buttons
-            buyButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const productId = parseInt(this.getAttribute('data-id'));
-                    addToCart(productId);
-                });
-            });
+            // Initialize CRUD operations first
+            initializeCRUD();
             
             // Responsive adjustments
             handleResize();
             window.addEventListener('resize', handleResize);
         });
+
+        // ========== CRUD OPERATIONS ==========
+        
+        // Initialize CRUD functionality
+        function initializeCRUD() {
+            console.log('Initializing CRUD functionality...');
+            
+            // Load products from localStorage
+            loadProductsFromStorage();
+            
+            // Setup CRUD event listeners
+            setupCRUDEventListeners();
+            
+            // Render products
+            console.log('About to render products...');
+            renderProducts();
+            renderInventoryTable();
+            
+            console.log('CRUD initialization complete');
+        }
+        
+        // Setup CRUD event listeners
+        function setupCRUDEventListeners() {
+            // Add Product Button
+            addProductBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                openAddProductModal();
+            });
+            
+            // Close Add Product Modal
+            closeAddProduct.addEventListener('click', function() {
+                closeAddProductModal();
+            });
+            
+            // Close Edit Product Modal
+            closeEditProduct.addEventListener('click', function() {
+                closeEditProductModal();
+            });
+            
+            // Add Product Form Submit
+            addProductForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                createProduct();
+            });
+            
+            // Edit Product Form Submit
+            editProductForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateProduct();
+            });
+            
+            // Close modals when clicking outside
+            addProductModal.addEventListener('click', function(e) {
+                if (e.target === addProductModal) {
+                    closeAddProductModal();
+                }
+            });
+            
+            editProductModal.addEventListener('click', function(e) {
+                if (e.target === editProductModal) {
+                    closeEditProductModal();
+                }
+            });
+        }
+        
+        // CREATE - Add new product
+        function createProduct() {
+            const productData = {
+                id: nextProductId++,
+                name: document.getElementById('productName').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                category: document.getElementById('productCategory').value,
+                stock: parseInt(document.getElementById('productStock').value),
+                image: document.getElementById('productImage').value,
+                description: document.getElementById('productDescription').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Validate form
+            if (!validateProductForm(productData)) {
+                return;
+            }
+            
+            // Add to products array
+            products.push(productData);
+            
+            // Save to localStorage
+            saveProductsToStorage();
+            
+            // Refresh displays
+            renderProducts();
+            renderInventoryTable();
+            
+            // Close modal and show success
+            closeAddProductModal();
+            showNotification('Product added successfully!', 'success');
+            
+            // Reset form
+            addProductForm.reset();
+        }
+        
+        // READ - Load products from storage
+        function loadProductsFromStorage() {
+            console.log('Loading products from storage...');
+            const savedProducts = localStorage.getItem('thriftvibe_products');
+            console.log('Saved products from localStorage:', savedProducts);
+            
+            if (savedProducts) {
+                products = JSON.parse(savedProducts);
+                console.log('Parsed products:', products);
+                // Update nextProductId to avoid conflicts
+                if (products.length > 0) {
+                    nextProductId = Math.max(...products.map(p => p.id)) + 1;
+                    console.log('Next product ID set to:', nextProductId);
+                }
+            } else {
+                console.log('No saved products found, initializing default products');
+                // Initialize with default products
+                initializeDefaultProducts();
+            }
+            
+            console.log('Final products array:', products);
+        }
+        
+        // Initialize default products
+        function initializeDefaultProducts() {
+            console.log('Initializing default products...');
+            products = [
+                {
+                    id: 1,
+                    name: 'Vintage Denim Jacket',
+                    price: 2499,
+                    category: 'Clothing',
+                    stock: 15,
+                    image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+                    description: 'Classic vintage denim jacket in excellent condition',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    name: 'Classic White Sneakers',
+                    price: 2999,
+                    category: 'Shoes',
+                    stock: 8,
+                    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+                    description: 'Clean white sneakers perfect for everyday wear',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 3,
+                    name: 'Floral Summer Dress',
+                    price: 1999,
+                    category: 'Clothing',
+                    stock: 3,
+                    image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80',
+                    description: 'Beautiful floral summer dress in perfect condition',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 4,
+                    name: 'Leather Ankle Boots',
+                    price: 3499,
+                    category: 'Shoes',
+                    stock: 0,
+                    image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80',
+                    description: 'High-quality leather ankle boots',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 5,
+                    name: 'Vintage Leather Bag',
+                    price: 1799,
+                    category: 'Accessories',
+                    stock: 12,
+                    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+                    description: 'Authentic vintage leather handbag',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 6,
+                    name: 'Retro Sunglasses',
+                    price: 899,
+                    category: 'Accessories',
+                    stock: 20,
+                    image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80',
+                    description: 'Stylish retro sunglasses',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 7,
+                    name: 'Oversized Sweater',
+                    price: 1299,
+                    category: 'Clothing',
+                    stock: 7,
+                    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+                    description: 'Cozy oversized sweater perfect for winter',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 8,
+                    name: 'High Heel Sandals',
+                    price: 2199,
+                    category: 'Shoes',
+                    stock: 5,
+                    image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80',
+                    description: 'Elegant high heel sandals for special occasions',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 9,
+                    name: 'Vintage Watch',
+                    price: 3999,
+                    category: 'Accessories',
+                    stock: 3,
+                    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1099&q=80',
+                    description: 'Classic vintage watch in working condition',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 10,
+                    name: 'Casual T-Shirt',
+                    price: 699,
+                    category: 'Clothing',
+                    stock: 25,
+                    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
+                    description: 'Comfortable casual t-shirt in great condition',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 11,
+                    name: 'Canvas Backpack',
+                    price: 1599,
+                    category: 'Accessories',
+                    stock: 9,
+                    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+                    description: 'Durable canvas backpack for daily use',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 12,
+                    name: 'Formal Blazer',
+                    price: 3299,
+                    category: 'Clothing',
+                    stock: 4,
+                    image: 'https://images.unsplash.com/photo-1594938298605-c8176548bc93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+                    description: 'Professional formal blazer for business wear',
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            console.log('Default products initialized:', products);
+            saveProductsToStorage();
+            console.log('Products saved to storage');
+        }
+        
+        // UPDATE - Edit existing product
+        function updateProduct() {
+            const productId = parseInt(document.getElementById('editProductId').value);
+            const productIndex = products.findIndex(p => p.id === productId);
+            
+            if (productIndex === -1) {
+                showNotification('Product not found!', 'error');
+                return;
+            }
+            
+            const updatedData = {
+                name: document.getElementById('editProductName').value,
+                price: parseFloat(document.getElementById('editProductPrice').value),
+                category: document.getElementById('editProductCategory').value,
+                stock: parseInt(document.getElementById('editProductStock').value),
+                image: document.getElementById('editProductImage').value,
+                description: document.getElementById('editProductDescription').value,
+                updatedAt: new Date().toISOString()
+            };
+            
+            // Validate form
+            if (!validateProductForm(updatedData)) {
+                return;
+            }
+            
+            // Update product
+            products[productIndex] = { ...products[productIndex], ...updatedData };
+            
+            // Save to localStorage
+            saveProductsToStorage();
+            
+            // Refresh displays
+            renderProducts();
+            renderInventoryTable();
+            
+            // Close modal and show success
+            closeEditProductModal();
+            showNotification('Product updated successfully!', 'success');
+        }
+        
+        // DELETE - Remove product
+        function deleteProduct(productId) {
+            const productIndex = products.findIndex(p => p.id === productId);
+            
+            if (productIndex === -1) {
+                showNotification('Product not found!', 'error');
+                return;
+            }
+            
+            const productName = products[productIndex].name;
+            
+            if (confirm(`Are you sure you want to delete "${productName}"?`)) {
+                products.splice(productIndex, 1);
+                
+                // Save to localStorage
+                saveProductsToStorage();
+                
+                // Refresh displays
+                renderProducts();
+                renderInventoryTable();
+                
+                showNotification('Product deleted successfully!', 'success');
+            }
+        }
+        
+        // Save products to localStorage
+        function saveProductsToStorage() {
+            localStorage.setItem('thriftvibe_products', JSON.stringify(products));
+        }
+        
+        // Validate product form
+        function validateProductForm(productData) {
+            if (!productData.name || productData.name.trim() === '') {
+                showNotification('Product name is required!', 'error');
+                return false;
+            }
+            
+            if (!productData.price || productData.price <= 0) {
+                showNotification('Valid price is required!', 'error');
+                return false;
+            }
+            
+            if (!productData.category) {
+                showNotification('Category is required!', 'error');
+                return false;
+            }
+            
+            if (productData.stock < 0) {
+                showNotification('Stock cannot be negative!', 'error');
+                return false;
+            }
+            
+            if (!productData.image || productData.image.trim() === '') {
+                showNotification('Image URL is required!', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Open Add Product Modal
+        function openAddProductModal() {
+            addProductModal.classList.add('active');
+        }
+        
+        // Close Add Product Modal
+        function closeAddProductModal() {
+            addProductModal.classList.remove('active');
+            addProductForm.reset();
+        }
+        
+        // Open Edit Product Modal
+        function openEditProductModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                showNotification('Product not found!', 'error');
+                return;
+            }
+            
+            // Fill form with product data
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('editProductName').value = product.name;
+            document.getElementById('editProductPrice').value = product.price;
+            document.getElementById('editProductCategory').value = product.category;
+            document.getElementById('editProductStock').value = product.stock;
+            document.getElementById('editProductImage').value = product.image;
+            document.getElementById('editProductDescription').value = product.description || '';
+            
+            editProductModal.classList.add('active');
+        }
+        
+        // Close Edit Product Modal
+        function closeEditProductModal() {
+            editProductModal.classList.remove('active');
+            editProductForm.reset();
+        }
+        
+        // Render products in the products section
+        function renderProducts() {
+            console.log('Starting renderProducts function');
+            console.log('Products array:', products);
+            
+            const productsContainer = document.getElementById('productsContainer');
+            if (!productsContainer) {
+                console.error('Products container not found');
+                return;
+            }
+            
+            console.log('Products container found:', productsContainer);
+            productsContainer.innerHTML = '';
+            
+            if (products.length === 0) {
+                console.log('No products to render');
+                productsContainer.innerHTML = '<p>No products available</p>';
+                return;
+            }
+            
+            products.forEach((product, index) => {
+                console.log(`Rendering product ${index + 1}:`, product.name);
+                
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-price">Rs ${product.price.toLocaleString()}</p>
+                        <p class="product-category" style="font-size: 12px; color: var(--gray); margin-bottom: 10px;">${product.category}</p>
+                        <button class="buy-btn" data-id="${product.id}">Add to Cart</button>
+                    </div>
+                `;
+                
+                productsContainer.appendChild(productCard);
+                
+                // Add event listener to the new button
+                const newButton = productCard.querySelector('.buy-btn');
+                if (newButton) {
+                    newButton.addEventListener('click', function() {
+                        addToCart(product.id);
+                    });
+                }
+            });
+            
+            console.log(`Successfully rendered ${products.length} products`);
+        }
+        
+        // Render inventory table
+        function renderInventoryTable() {
+            const inventoryTableBody = document.querySelector('.inventory-table tbody');
+            if (!inventoryTableBody) {
+                console.error('Inventory table body not found');
+                return;
+            }
+            
+            inventoryTableBody.innerHTML = '';
+            
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                
+                // Determine stock status
+                let statusClass = 'in-stock';
+                let statusText = 'In Stock';
+                
+                if (product.stock === 0) {
+                    statusClass = 'out-of-stock';
+                    statusText = 'Out of Stock';
+                } else if (product.stock <= 5) {
+                    statusClass = 'low-stock';
+                    statusText = 'Low Stock';
+                }
+                
+                row.innerHTML = `
+                    <td>#TV${product.id.toString().padStart(3, '0')}</td>
+                    <td>${product.name}</td>
+                    <td>${product.category}</td>
+                    <td>Rs ${product.price.toLocaleString()}</td>
+                    <td>${product.stock}</td>
+                    <td><span class="status ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="openEditProductModal(${product.id})">Edit</button>
+                        <button class="btn btn-secondary" onclick="deleteProduct(${product.id})">Delete</button>
+                    </td>
+                `;
+                
+                inventoryTableBody.appendChild(row);
+            });
+            
+            console.log(`Rendered inventory table with ${products.length} products`);
+        }
 
         // Setup navigation between sections
         function setupNavigation() {
@@ -1111,10 +1642,412 @@
             const searchButton = document.getElementById('searchButton');
             
             // Search on button click
-            searchButton.addEventListener('click', performSearch);
+            searchButton.addEventListener('click', function() {
+                performSearch();
+            });
             
             // Search on Enter key press
-            searchInput.addEventListener('keyup', function(e) {
+            searchInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     performSearch();
-               
+                }
+            });
+        }
+
+        // Perform search functionality
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                alert('Please enter a search term');
+                return;
+            }
+            
+            // Filter products based on search term
+            const productCards = document.querySelectorAll('.product-card');
+            let foundProducts = 0;
+            
+            productCards.forEach(card => {
+                const title = card.querySelector('.product-title').textContent.toLowerCase();
+                const price = card.querySelector('.product-price').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || price.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    foundProducts++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            if (foundProducts === 0) {
+                alert('No products found matching your search');
+                // Show all products again
+                productCards.forEach(card => {
+                    card.style.display = 'block';
+                });
+            } else {
+                alert(`Found ${foundProducts} product(s) matching "${searchTerm}"`);
+            }
+        }
+
+        // Setup login functionality
+        function setupLogin() {
+            loginButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginModal.classList.add('active');
+            });
+            
+            closeLogin.addEventListener('click', function() {
+                loginModal.classList.remove('active');
+            });
+            
+            // Close modal when clicking outside
+            loginModal.addEventListener('click', function(e) {
+                if (e.target === loginModal) {
+                    loginModal.classList.remove('active');
+                }
+            });
+            
+            // Handle login form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                // Simple validation
+                if (email === '' || password === '') {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                // Simulate login (in real app, this would connect to backend)
+                if (email === 'admin@thriftvibe.com' && password === 'admin123') {
+                    alert('Login successful! Welcome to ThriftVibe');
+                    loginModal.classList.remove('active');
+                    loginButton.innerHTML = '<i class="fas fa-user"></i> <span>Admin</span>';
+                    loginButton.style.background = 'var(--primary)';
+                } else {
+                    alert('Invalid email or password. Try admin@thriftvibe.com / admin123');
+                }
+            });
+        }
+
+        // Add product to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            
+            if (!product) {
+                showNotification('Product not found!', 'error');
+                return;
+            }
+            
+            // Check if product is in stock
+            if (product.stock <= 0) {
+                showNotification('Product is out of stock!', 'error');
+                return;
+            }
+            
+            // Check if product already exists in cart
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ 
+                    id: product.id, 
+                    title: product.name, 
+                    price: `Rs ${product.price.toLocaleString()}`,
+                    quantity: 1 
+                });
+            }
+            
+            updateCartCount();
+            saveCartToStorage();
+            
+            // Visual feedback
+            const button = document.querySelector(`[data-id="${productId}"]`);
+            const originalText = button.textContent;
+            button.textContent = 'Added!';
+            button.style.background = 'var(--secondary)';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = 'var(--primary)';
+            }, 1000);
+            
+            showNotification(`${product.name} added to cart!`, 'success');
+        }
+
+        // Update cart count display
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+        }
+
+        // Save cart to localStorage
+        function saveCartToStorage() {
+            localStorage.setItem('thriftvibe_cart', JSON.stringify(cart));
+        }
+
+        // Load products from backend (simulated)
+        function loadProductsFromBackend() {
+            // This function is now handled by initializeCRUD()
+            // which loads products from localStorage and renders them
+            console.log('Products loaded via CRUD system');
+        }
+
+        // Handle responsive adjustments
+        function handleResize() {
+            const width = window.innerWidth;
+            
+            if (width < 768) {
+                // Mobile adjustments
+                document.querySelector('.hero h1').style.fontSize = '28px';
+                document.querySelector('.hero p').style.fontSize = '16px';
+            } else {
+                // Desktop adjustments
+                document.querySelector('.hero h1').style.fontSize = '48px';
+                document.querySelector('.hero p').style.fontSize = '20px';
+            }
+        }
+
+        // Add smooth scrolling for better UX
+        function smoothScrollTo(element) {
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Add loading animation
+        function showLoading() {
+            const loader = document.createElement('div');
+            loader.id = 'loader';
+            loader.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(255,255,255,0.9);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+            `;
+            loader.innerHTML = '<div style="font-size: 24px; color: var(--primary);">Loading...</div>';
+            document.body.appendChild(loader);
+        }
+
+        function hideLoading() {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.remove();
+            }
+        }
+
+        // Add form validation
+        function validateForm(form) {
+            const inputs = form.querySelectorAll('input[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (input.value.trim() === '') {
+                    input.style.borderColor = 'red';
+                    isValid = false;
+                } else {
+                    input.style.borderColor = '#ddd';
+                }
+            });
+            
+            return isValid;
+        }
+
+        // Add notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--primary)' : type === 'error' ? 'var(--secondary)' : '#333'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            // Add CSS animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+                style.remove();
+            }, 3000);
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + K for search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+            
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                loginModal.classList.remove('active');
+            }
+        });
+
+        // Add cart functionality to cart button
+        document.getElementById('cartButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (cart.length === 0) {
+                showNotification('Your cart is empty', 'info');
+                return;
+            }
+            
+            // Show cart summary
+            let cartSummary = 'Cart Summary:\n\n';
+            let total = 0;
+            
+            cart.forEach(item => {
+                const price = parseFloat(item.price.replace('Rs ', '').replace(',', ''));
+                cartSummary += `${item.title} x${item.quantity} - Rs ${(price * item.quantity).toLocaleString()}\n`;
+                total += price * item.quantity;
+            });
+            
+            cartSummary += `\nTotal: Rs ${total.toLocaleString()}`;
+            
+            alert(cartSummary);
+        });
+
+        // Inventory management is now handled by the CRUD system
+        // The renderInventoryTable() function creates the table with proper Edit/Delete buttons
+
+        // Add category filtering
+        function setupCategoryFiltering() {
+            const categoryLinks = document.querySelectorAll('.category a');
+            
+            categoryLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const category = this.closest('.category').querySelector('.category-title').textContent;
+                    showNotification(`Filtering by ${category} - Coming Soon!`, 'info');
+                });
+            });
+        }
+
+        // Initialize category filtering
+        setupCategoryFiltering();
+
+        // Add dashboard functionality
+        function setupDashboard() {
+            const dashboardLinks = document.querySelectorAll('.sidebar-menu a');
+            
+            dashboardLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const action = this.textContent.trim();
+                    showNotification(`${action} functionality - Coming Soon!`, 'info');
+                });
+            });
+        }
+
+        // Initialize dashboard functionality
+        setupDashboard();
+
+        // Add product image lazy loading
+        function setupLazyLoading() {
+            const images = document.querySelectorAll('.product-img');
+            
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s';
+                        
+                        img.onload = () => {
+                            img.style.opacity = '1';
+                        };
+                        
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            images.forEach(img => imageObserver.observe(img));
+        }
+
+        // Initialize lazy loading
+        setupLazyLoading();
+
+        // Add performance monitoring
+        window.addEventListener('load', function() {
+            const loadTime = performance.now();
+            console.log(`Page loaded in ${loadTime.toFixed(2)}ms`);
+            
+            if (loadTime > 3000) {
+                showNotification('Page loaded successfully!', 'success');
+            }
+        });
+
+        // Add error handling
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript error:', e.error);
+            showNotification('An error occurred. Please refresh the page.', 'error');
+        });
+
+        // Add offline detection
+        window.addEventListener('online', function() {
+            showNotification('You are back online!', 'success');
+        });
+
+        window.addEventListener('offline', function() {
+            showNotification('You are offline. Some features may not work.', 'error');
+        });
+
+        // Add print functionality
+        function printPage() {
+            window.print();
+        }
+
+        // Add share functionality
+        function sharePage() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'ThriftVibe - Sustainable Fashion',
+                    text: 'Check out this amazing thrift store!',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    showNotification('Page URL copied to clipboard!', 'success');
+                });
+            }
+        }
+
+        // Make functions globally accessible
+        window.openEditProductModal = openEditProductModal;
+        window.deleteProduct = deleteProduct;
+        window.addToCart = addToCart;
+    </script>
+</body>
+</html>
