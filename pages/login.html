@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ThriftVibe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2a9d8f;
+            --secondary: #e76f51;
+            --dark: #264653;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo i {
+            margin-right: 15px;
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+        }
+        
+        /* Login Container */
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        .login-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+        
+        .login-form-section {
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .login-image-section {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1520006403909-838d6b92c22e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+        
+        .login-image-content h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .login-image-content p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        /* Form Styles */
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .form-header h2 {
+            color: var(--dark);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .form-header p {
+            color: var(--gray);
+            font-size: 16px;
+        }
+        
+        .form-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .role-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .role-option {
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .role-option:hover {
+            border-color: var(--primary);
+            background: rgba(42, 157, 143, 0.05);
+        }
+        
+        .role-option.selected {
+            border-color: var(--primary);
+            background: rgba(42, 157, 143, 0.1);
+        }
+        
+        .role-option i {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .role-option h4 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .role-option p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .submit-btn:hover {
+            background: #21867a;
+        }
+        
+        .submit-btn:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+        }
+        
+        .form-footer {
+            text-align: center;
+            color: var(--gray);
+        }
+        
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            transition: opacity 0.3s;
+        }
+        
+        .back-home:hover {
+            opacity: 0.8;
+        }
+        
+        .back-home i {
+            margin-right: 8px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .login-image-section {
+                display: none;
+            }
+            
+            .login-form-section {
+                padding: 40px 30px;
+            }
+            
+            .role-selection {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-tabs {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                border-bottom: none;
+                border-right: 3px solid transparent;
+            }
+            
+            .tab-button.active {
+                border-bottom: none;
+                border-right-color: var(--primary);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .login-form-section {
+                padding: 30px 20px;
+            }
+            
+            .form-header h2 {
+                font-size: 24px;
+            }
+            
+            .logo {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-home">
+        <i class="fas fa-arrow-left"></i>
+        Back to Home
+    </a>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-recycle"></i>
+                ThriftVibe
+            </div>
+            <p>Welcome back! Please sign in to your account</p>
+        </div>
+        
+        <div class="login-container">
+            <div class="login-content">
+                <div class="login-form-section">
+                    <div class="form-header">
+                        <h2>Sign In</h2>
+                        <p>Access your account to continue shopping</p>
+                    </div>
+                    
+                    <div class="form-tabs">
+                        <button class="tab-button active" onclick="switchTab('login')">Login</button>
+                        <button class="tab-button" onclick="switchTab('register')">Sign Up</button>
+                    </div>
+                    
+                    <!-- Login Form -->
+                    <div id="login-tab" class="tab-content active">
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label for="loginEmail">Email Address</label>
+                                <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="loginPassword">Password</label>
+                                <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
+                            </div>
+                            
+                            <div class="role-selection">
+                                <div class="role-option" onclick="selectRole('user')">
+                                    <i class="fas fa-user"></i>
+                                    <h4>Customer</h4>
+                                    <p>Shop and browse products</p>
+                                </div>
+                                <div class="role-option" onclick="selectRole('admin')">
+                                    <i class="fas fa-user-shield"></i>
+                                    <h4>Admin</h4>
+                                    <p>Manage store and inventory</p>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn" id="loginSubmitBtn">Sign In</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Register Form -->
+                    <div id="register-tab" class="tab-content">
+                        <form id="registerForm">
+                            <div class="form-group">
+                                <label for="registerName">Full Name</label>
+                                <input type="text" id="registerName" class="form-control" placeholder="Enter your full name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="registerEmail">Email Address</label>
+                                <input type="email" id="registerEmail" class="form-control" placeholder="Enter your email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="registerPassword">Password</label>
+                                <input type="password" id="registerPassword" class="form-control" placeholder="Create a password" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                            </div>
+                            
+                            <div class="role-selection">
+                                <div class="role-option" onclick="selectRole('user')">
+                                    <i class="fas fa-user"></i>
+                                    <h4>Customer</h4>
+                                    <p>Shop and browse products</p>
+                                </div>
+                                <div class="role-option" onclick="selectRole('admin')">
+                                    <i class="fas fa-user-shield"></i>
+                                    <h4>Admin</h4>
+                                    <p>Manage store and inventory</p>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn" id="registerSubmitBtn">Create Account</button>
+                        </form>
+                    </div>
+                    
+                    <div class="form-footer">
+                        <p id="formFooterText">Don't have an account? <a href="#" onclick="switchTab('register')">Sign up here</a></p>
+                    </div>
+                </div>
+                
+                <div class="login-image-section">
+                    <div class="login-image-content">
+                        <h2>Join Our Community</h2>
+                        <p>Discover amazing secondhand fashion finds while making a positive impact on the environment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedRole = null;
+        let currentTab = 'login';
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupForms();
+        });
+
+        // Switch between login and register tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tab + '-tab').classList.add('active');
+            
+            // Update footer text
+            const footerText = document.getElementById('formFooterText');
+            if (tab === 'login') {
+                footerText.innerHTML = 'Don\'t have an account? <a href="#" onclick="switchTab(\'register\')">Sign up here</a>';
+            } else {
+                footerText.innerHTML = 'Already have an account? <a href="#" onclick="switchTab(\'login\')">Sign in here</a>';
+            }
+        }
+
+        // Select user role
+        function selectRole(role) {
+            selectedRole = role;
+            
+            // Update visual selection
+            document.querySelectorAll('.role-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.closest('.role-option').classList.add('selected');
+        }
+
+        // Setup forms
+        function setupForms() {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            loginForm.addEventListener('submit', handleLogin);
+            registerForm.addEventListener('submit', handleRegister);
+        }
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            if (!selectedRole) {
+                alert('Please select your role (Customer or Admin)');
+                return;
+            }
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simple validation
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Simulate login process
+            const submitBtn = document.getElementById('loginSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Signing In...';
+            
+            setTimeout(() => {
+                // Store user info in localStorage
+                const userInfo = {
+                    email: email,
+                    role: selectedRole,
+                    loginTime: new Date().toISOString()
+                };
+                localStorage.setItem('thriftvibe_user', JSON.stringify(userInfo));
+                
+                // Redirect based on role
+                if (selectedRole === 'admin') {
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    window.location.href = 'user-dashboard.html';
+                }
+            }, 1500);
+        }
+
+        // Handle registration
+        function handleRegister(e) {
+            e.preventDefault();
+            
+            if (!selectedRole) {
+                alert('Please select your role (Customer or Admin)');
+                return;
+            }
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Simple validation
+            if (!name || !email || !password || !confirmPassword) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long');
+                return;
+            }
+            
+            // Simulate registration process
+            const submitBtn = document.getElementById('registerSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating Account...';
+            
+            setTimeout(() => {
+                // Store user info in localStorage
+                const userInfo = {
+                    name: name,
+                    email: email,
+                    role: selectedRole,
+                    registrationTime: new Date().toISOString()
+                };
+                localStorage.setItem('thriftvibe_user', JSON.stringify(userInfo));
+                
+                alert('Account created successfully! Redirecting to dashboard...');
+                
+                // Redirect based on role
+                if (selectedRole === 'admin') {
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    window.location.href = 'user-dashboard.html';
+                }
+            }, 1500);
+        }
+    </script>
+    <script src="../script.js"></script>
+</body>
+</html>

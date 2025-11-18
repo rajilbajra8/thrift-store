@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThriftVibe - Sustainable Fashion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header with Search and Login -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-recycle"></i>
+                    <a href="index.html">ThriftVibe</a>
+                </div>
+                
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search for clothes, shoes, accessories...">
+                    <button id="searchButton"><i class="fas fa-search"></i> Search</button>
+                </div>
+                
+                <div class="user-actions">
+                    <a href="pages/cart.html" id="cartButton">
+                        <i class="fas fa-shopping-cart"></i> 
+                        <span>Cart</span>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                    <a href="pages/login.html" class="login-btn"><i class="fas fa-user"></i> <span>Login</span></a>
+                </div>
+            </div>
+        </div>
+        
+        <nav>
+            <div class="container">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="pages/products.html" class="nav-link"><i class="fas fa-tshirt"></i> Products</a></li>
+                    <li><a href="pages/about.html" class="nav-link"><i class="fas fa-info-circle"></i> About Us</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="home-section">
+        <div class="hero-content">
+            <h1>Style That Doesn't Cost the Earth</h1>
+            <p>Discover unique secondhand clothing and shoes at amazing prices</p>
+            <a href="pages/products.html" class="cta-btn">Shop Now</a>
+        </div>
+    </section>
+    
+    <!-- Products Section -->
+    <section class="container" id="products-section">
+        <h2 class="section-title">Featured Items</h2>
+        
+        <div class="products" id="productsContainer">
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="Denim Jacket" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">Vintage Denim Jacket</h3>
+                    <p class="product-price">Rs 2,499</p>
+                    <button class="buy-btn" data-id="1">Add to Cart</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Sneakers" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">Classic White Sneakers</h3>
+                    <p class="product-price">Rs 2,999</p>
+                    <button class="buy-btn" data-id="2">Add to Cart</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80" alt="Summer Dress" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">Floral Summer Dress</h3>
+                    <p class="product-price">Rs 1,999</p>
+                    <button class="buy-btn" data-id="3">Add to Cart</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80" alt="Leather Boots" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">Leather Ankle Boots</h3>
+                    <p class="product-price">Rs 3,499</p>
+                    <button class="buy-btn" data-id="4">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <p>ThriftVibe is dedicated to providing quality secondhand fashion while promoting sustainable shopping practices.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="index.html">Home</a>
+                    <a href="pages/products.html">Products</a>
+                    <a href="pages/about.html">About</a>
+                    <a href="pages/contact.html">Contact</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Thrift Street, Fashion City</p>
+                    <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                    <p><i class="fas fa-envelope"></i> info@thriftvibe.com</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="socials">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 ThriftVibe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+

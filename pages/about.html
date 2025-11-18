@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - ThriftVibe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2a9d8f;
+            --secondary: #e76f51;
+            --dark: #264653;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            width: 50%;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid var(--primary);
+            border-radius: 30px 0 0 30px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-bar button {
+            padding: 12px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 30px 30px 0;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        /* User Actions */
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-actions a {
+            margin-left: 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .user-actions a i {
+            margin-right: 5px;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .login-btn {
+            background: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: background 0.3s;
+        }
+        
+        .login-btn:hover {
+            background: #d65a3c;
+        }
+        
+        /* Navigation */
+        nav {
+            background: var(--dark);
+            padding: 12px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1520006403909-838d6b92c22e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .page-header p {
+            font-size: 18px;
+        }
+        
+        /* About Section */
+        .about-section {
+            margin-bottom: 60px;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 32px;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--secondary);
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+        
+        .about-text {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .about-text h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .about-text p {
+            margin-bottom: 15px;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        .about-image {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        
+        /* Mission & Values */
+        .mission-values {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .mission-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .mission-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .mission-card i {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .mission-card h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .mission-card p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 60px;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .contact-info h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .contact-item i {
+            font-size: 20px;
+            color: var(--primary);
+            margin-right: 15px;
+            width: 25px;
+        }
+        
+        .contact-form {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .form-control.textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background: #21867a;
+        }
+        
+        /* Reviews Section */
+        .reviews-section {
+            margin-bottom: 60px;
+        }
+        
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .review-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .reviewer-info h4 {
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .reviewer-info .rating {
+            color: #ffc107;
+            font-size: 14px;
+        }
+        
+        .review-text {
+            color: var(--gray);
+            line-height: 1.6;
+            font-style: italic;
+        }
+        
+        .review-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--gray);
+            font-size: 12px;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--secondary);
+        }
+        
+        .footer-section p {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: var(--secondary);
+        }
+        
+        .socials a {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .page-header h1 {
+                font-size: 28px;
+            }
+            
+            .page-header p {
+                font-size: 16px;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .page-header {
+                height: 250px;
+            }
+            
+            .section-title {
+                font-size: 26px;
+            }
+            
+            .mission-values {
+                grid-template-columns: 1fr;
+            }
+            
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-recycle"></i>
+                    <a href="../index.html" style="color: inherit; text-decoration: none;">ThriftVibe</a>
+                </div>
+                
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search for clothes, shoes, accessories...">
+                    <button id="searchButton"><i class="fas fa-search"></i> Search</button>
+                </div>
+                
+                <div class="user-actions">
+                    <a href="cart.html" id="cartButton">
+                        <i class="fas fa-shopping-cart"></i> 
+                        <span>Cart</span>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                    <a href="login.html" class="login-btn"><i class="fas fa-user"></i> <span>Login</span></a>
+                </div>
+            </div>
+        </div>
+        
+        <nav>
+            <div class="container">
+                <ul class="nav-links">
+                    <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="products.html" class="nav-link"><i class="fas fa-tshirt"></i> Products</a></li>
+                    <li><a href="about.html" class="nav-link active"><i class="fas fa-info-circle"></i> About Us</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>About ThriftVibe</h1>
+            <p>Your sustainable fashion destination</p>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <h2 class="section-title">Our Story</h2>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Welcome to ThriftVibe</h3>
+                    <p>Founded in 2020, ThriftVibe emerged from a simple yet powerful vision: to make sustainable fashion accessible to everyone while reducing the environmental impact of the fashion industry.</p>
+                    <p>We believe that style shouldn't come at the cost of our planet. Every piece in our collection tells a story, and by choosing secondhand, you're not just getting unique fashion finds – you're making a positive impact on the environment.</p>
+                    <p>Our carefully curated selection includes everything from vintage treasures to contemporary pieces, all at affordable prices. We're passionate about giving clothes a second life and helping you build a wardrobe that reflects your values.</p>
+                </div>
+                
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="ThriftVibe Store">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Mission & Values -->
+    <section class="mission-values">
+        <div class="container">
+            <div class="mission-card">
+                <i class="fas fa-leaf"></i>
+                <h3>Sustainability</h3>
+                <p>We're committed to reducing fashion waste by giving pre-loved items a new life. Every purchase helps reduce the environmental impact of fast fashion.</p>
+            </div>
+            
+            <div class="mission-card">
+                <i class="fas fa-heart"></i>
+                <h3>Quality</h3>
+                <p>We carefully inspect every item to ensure it meets our quality standards. You can shop with confidence knowing you're getting great value.</p>
+            </div>
+            
+            <div class="mission-card">
+                <i class="fas fa-users"></i>
+                <h3>Community</h3>
+                <p>We're building a community of conscious shoppers who value sustainability and style. Join us in making fashion more responsible.</p>
+            </div>
+            
+            <div class="mission-card">
+                <i class="fas fa-star"></i>
+                <h3>Unique Style</h3>
+                <p>Discover one-of-a-kind pieces that help you stand out. Our curated collection offers styles you won't find anywhere else.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>Address</strong><br>
+                            123 Thrift Street<br>
+                            Fashion City, FC 12345
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <strong>Phone</strong><br>
+                            (123) 456-7890<br>
+                            Mon-Fri: 9AM-6PM
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>Email</strong><br>
+                            info@thriftvibe.com<br>
+                            support@thriftvibe.com
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>Store Hours</strong><br>
+                            Mon-Sat: 10AM-8PM<br>
+                            Sunday: 12PM-6PM
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h3>Send us a Message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" class="form-control textarea" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Reviews Section -->
+    <section class="reviews-section">
+        <div class="container">
+            <h2 class="section-title">What Our Customers Say</h2>
+            
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-date">Dec 15, 2023</div>
+                    <div class="review-header">
+                        <div class="reviewer-avatar">SJ</div>
+                        <div class="reviewer-info">
+                            <h4>Sarah Johnson</h4>
+                            <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="review-text">
+                        "I absolutely love ThriftVibe! Found the most amazing vintage denim jacket here. The quality is incredible and the prices are unbeatable. Plus, I feel good knowing I'm shopping sustainably."
+                    </div>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-date">Dec 10, 2023</div>
+                    <div class="review-header">
+                        <div class="reviewer-avatar">MR</div>
+                        <div class="reviewer-info">
+                            <h4>Mike Rodriguez</h4>
+                            <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="review-text">
+                        "Great selection of shoes! Found a pair of classic sneakers in perfect condition. The staff is super helpful and the store has a really cool vibe. Highly recommend!"
+                    </div>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-date">Dec 8, 2023</div>
+                    <div class="review-header">
+                        <div class="reviewer-avatar">EC</div>
+                        <div class="reviewer-info">
+                            <h4>Emily Chen</h4>
+                            <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="review-text">
+                        "ThriftVibe has become my go-to for unique fashion finds. The online shopping experience is smooth, and the items always arrive exactly as described. Love supporting sustainable fashion!"
+                    </div>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-date">Dec 5, 2023</div>
+                    <div class="review-header">
+                        <div class="reviewer-avatar">DT</div>
+                        <div class="reviewer-info">
+                            <h4>David Thompson</h4>
+                            <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="review-text">
+                        "Amazing customer service! Had an issue with my order and they resolved it immediately. The quality of items is consistently great, and I love the environmental mission."
+                    </div>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-date">Dec 2, 2023</div>
+                    <div class="review-header">
+                        <div class="reviewer-avatar">LW</div>
+                        <div class="reviewer-info">
+                            <h4>Lisa Wang</h4>
+                            <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="review-text">
+                        "Found some incredible vintage pieces here! The curation is excellent and everything is in such good condition. It's refreshing to find a thrift store that focuses on quality."
+                    </div>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-date">Nov 28, 2023</div>
+                    <div class="review-header">
+                        <div class="reviewer-avatar">JM</div>
+                        <div class="reviewer-info">
+                            <h4>James Miller</h4>
+                            <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="review-text">
+                        "Great prices and even better quality! The staff knows their stuff and helped me find exactly what I was looking for. Will definitely be back for more sustainable fashion finds."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <p>ThriftVibe is dedicated to providing quality secondhand fashion while promoting sustainable shopping practices.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="../index.html">Home</a>
+                    <a href="products.html">Products</a>
+                    <a href="about.html">About</a>
+                    <a href="login.html">Login</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Thrift Street, Fashion City</p>
+                    <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                    <p><i class="fas fa-envelope"></i> info@thriftvibe.com</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="socials">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 ThriftVibe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Cart functionality
+        let cart = [];
+        const cartCount = document.getElementById('cartCount');
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load cart from localStorage if available
+            const savedCart = localStorage.getItem('thriftvibe_cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCartCount();
+            }
+            
+            // Setup contact form
+            setupContactForm();
+        });
+
+        // Update cart count
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+        }
+
+        // Setup contact form
+        function setupContactForm() {
+            const contactForm = document.getElementById('contactForm');
+            
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form data
+                const formData = new FormData(contactForm);
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value;
+                
+                // Simple validation
+                if (!name || !email || !subject || !message) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
+                
+                // Simulate form submission
+                alert('Thank you for your message! We\'ll get back to you soon.');
+                contactForm.reset();
+            });
+        }
+    </script>
+    <script src="../script.js"></script>
+</body>
+</html>
