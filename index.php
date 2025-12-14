@@ -1,3 +1,20 @@
+<?php
+// Add at the very top of the file
+require_once "pages/db.php";
+
+// Get 8 latest products from database
+$query = "SELECT item_id, name, category, price, image_url, description 
+          FROM items 
+          ORDER BY created_at DESC 
+          LIMIT 8";
+$result = $conn->query($query);
+$products = [];
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $products[] = $row;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +31,7 @@
             <div class="header-content">
                 <div class="logo">
                     <i class="fas fa-recycle"></i>
-                    <a href="index.html">ThriftVibe</a>
+                    <a href="index.php">ThriftVibe</a>
                 </div>
                 
                 <div class="search-bar">
@@ -23,12 +40,12 @@
                 </div>
                 
                 <div class="user-actions">
-                    <a href="pages/cart.html" id="cartButton">
+                    <a href="pages/cart.php" id="cartButton">
                         <i class="fas fa-shopping-cart"></i> 
                         <span>Cart</span>
                         <span class="cart-count" id="cartCount">0</span>
                     </a>
-                    <a href="pages/login.html" class="login-btn"><i class="fas fa-user"></i> <span>Login</span></a>
+                    <a href="pages/login.php" class="login-btn"><i class="fas fa-user"></i> <span>Login</span></a>
                 </div>
             </div>
         </div>
@@ -36,8 +53,8 @@
         <nav>
             <div class="container">
                 <ul class="nav-links">
-                    <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="pages/products.html" class="nav-link"><i class="fas fa-tshirt"></i> Products</a></li>
+                    <li><a href="index.php" class="nav-link active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="pages/products.php" class="nav-link"><i class="fas fa-tshirt"></i> Products</a></li>
                     <li><a href="pages/about.html" class="nav-link"><i class="fas fa-info-circle"></i> About Us</a></li>
                 </ul>
             </div>
@@ -49,52 +66,40 @@
         <div class="hero-content">
             <h1>Style That Doesn't Cost the Earth</h1>
             <p>Discover unique secondhand clothing and shoes at amazing prices</p>
-            <a href="pages/products.html" class="cta-btn">Shop Now</a>
+            <a href="pages/products.php" class="cta-btn">Shop Now</a>
         </div>
     </section>
     
     <!-- Products Section -->
-    <section class="container" id="products-section">
-        <h2 class="section-title">Featured Items</h2>
-        
-        <div class="products" id="productsContainer">
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="Denim Jacket" class="product-img">
-                <div class="product-info">
-                    <h3 class="product-title">Vintage Denim Jacket</h3>
-                    <p class="product-price">Rs 2,499</p>
-                    <button class="buy-btn" data-id="1">Add to Cart</button>
+<section class="container" id="products-section">
+    <h2 class="section-title">Featured Items</h2>
+    
+    <div class="products" id="productsContainer">
+            <!-- If database has products, show them dynamically -->
+            <?php foreach ($products as $product): ?>
+                <?php 
+                // $product[];
+                $rawImage = trim($product['image_url'] ?? '');
+                if ($rawImage === '') {
+                    $image = 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80';
+                } elseif (preg_match('~^https?://~i', $rawImage)) {
+                    $image = $rawImage;
+                } else {
+                    $image = $rawImage;
+                }
+                $price = 'Rs ' . number_format($product['price'], 2);
+                ?>
+                <div class="product-card">
+                    <img src="<?php echo $image; ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h3>
+                        <p class="product-price"><?php echo $price; ?></p>
+                        <a class="buy-btn" href="pages/products.php">View Product</a>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Sneakers" class="product-img">
-                <div class="product-info">
-                    <h3 class="product-title">Classic White Sneakers</h3>
-                    <p class="product-price">Rs 2,999</p>
-                    <button class="buy-btn" data-id="2">Add to Cart</button>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80" alt="Summer Dress" class="product-img">
-                <div class="product-info">
-                    <h3 class="product-title">Floral Summer Dress</h3>
-                    <p class="product-price">Rs 1,999</p>
-                    <button class="buy-btn" data-id="3">Add to Cart</button>
-                </div>
-            </div>
-            
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80" alt="Leather Boots" class="product-img">
-                <div class="product-info">
-                    <h3 class="product-title">Leather Ankle Boots</h3>
-                    <p class="product-price">Rs 3,499</p>
-                    <button class="buy-btn" data-id="4">Add to Cart</button>
-                </div>
-            </div>
-        </div>
-    </section>
+            <?php endforeach; ?>
+    </div>
+</section>
     
     <!-- Footer -->
     <footer>
@@ -107,16 +112,16 @@
                 
                 <div class="footer-section">
                     <h3>Quick Links</h3>
-                    <a href="index.html">Home</a>
-                    <a href="pages/products.html">Products</a>
+                    <a href="index.php">Home</a>
+                    <a href="pages/products.php">Products</a>
                     <a href="pages/about.html">About</a>
                     <a href="pages/contact.html">Contact</a>
                 </div>
                 
                 <div class="footer-section">
                     <h3>Contact Us</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> 123 Thrift Street, Fashion City</p>
-                    <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Patan,Lalitpur</p>
+                    <p><i class="fas fa-phone"></i> 987654310</p>
                     <p><i class="fas fa-envelope"></i> info@thriftvibe.com</p>
                 </div>
                 

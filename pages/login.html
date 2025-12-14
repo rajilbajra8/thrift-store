@@ -1,34 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Login - ThriftVibe</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <style>
-        * {
+        body {
+            background-color: #f5f7fa;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        :root {
-            --primary: #2a9d8f;
-            --secondary: #e76f51;
-            --dark: #264653;
-            --light: #f8f9fa;
-            --gray: #6c757d;
-        }
-        
-        body {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .container {
@@ -37,561 +24,504 @@
             padding: 0 20px;
         }
         
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
         }
         
         .logo {
-            font-size: 36px;
+            font-size: 28px;
             font-weight: 700;
-            color: white;
+            color: #2a9d8f;
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
         }
         
         .logo i {
-            margin-right: 15px;
+            margin-right: 10px;
         }
         
-        .header p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 18px;
+        .logo a {
+            color: inherit;
+            text-decoration: none;
         }
         
-        /* Login Container */
-        .login-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            max-width: 900px;
-            width: 100%;
-        }
-        
-        .login-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 600px;
-        }
-        
-        .login-form-section {
-            padding: 60px 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .login-image-section {
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1520006403909-838d6b92c22e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
-        }
-        
-        .login-image-content h2 {
-            font-size: 32px;
-            margin-bottom: 20px;
-        }
-        
-        .login-image-content p {
-            font-size: 18px;
-            opacity: 0.9;
-        }
-        
-        /* Form Styles */
-        .form-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .form-header h2 {
-            color: var(--dark);
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        
-        .form-header p {
-            color: var(--gray);
-            font-size: 16px;
-        }
-        
-        .form-tabs {
-            display: flex;
+        /* Navigation */
+        nav {
+            background: #264653;
+            padding: 12px 0;
             margin-bottom: 30px;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* Login Form */
+        .login-box {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto 60px;
+            padding: 35px;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
             border-bottom: 2px solid #eee;
         }
         
-        .tab-button {
+        .tab-btn {
             flex: 1;
-            padding: 15px;
+            padding: 12px;
             background: none;
             border: none;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--gray);
-            cursor: pointer;
-            transition: all 0.3s;
             border-bottom: 3px solid transparent;
-        }
-        
-        .tab-button.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
+            color: #6c757d;
             font-weight: 600;
-            color: var(--dark);
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #eee;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        .role-selection {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .role-option {
-            padding: 15px;
-            border: 2px solid #eee;
-            border-radius: 10px;
-            text-align: center;
+            font-size: 15px;
             cursor: pointer;
-            transition: all 0.3s;
         }
         
-        .role-option:hover {
-            border-color: var(--primary);
-            background: rgba(42, 157, 143, 0.05);
+        .tab-btn.active {
+            border-bottom-color: #2a9d8f;
+            color: #2a9d8f;
         }
         
-        .role-option.selected {
-            border-color: var(--primary);
-            background: rgba(42, 157, 143, 0.1);
+        /* Form */
+        .form-group {
+            margin-bottom: 18px;
         }
         
-        .role-option i {
-            font-size: 24px;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-        
-        .role-option h4 {
-            color: var(--dark);
-            margin-bottom: 5px;
-        }
-        
-        .role-option p {
-            color: var(--gray);
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #264653;
             font-size: 14px;
         }
         
+        .form-input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        /* Role Selection */
+        .roles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .role-option {
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .role-option.selected {
+            border-color: #2a9d8f;
+            background: rgba(42,157,143,0.1);
+        }
+        
+        .role-icon {
+            font-size: 20px;
+            color: #2a9d8f;
+        }
+        
+        .role-title {
+            margin: 8px 0 4px;
+            color: #264653;
+            font-size: 14px;
+        }
+        
+        .role-desc {
+            margin: 0;
+            color: #6c757d;
+            font-size: 13px;
+        }
+        
+        /* Buttons */
         .submit-btn {
             width: 100%;
-            padding: 15px;
-            background: var(--primary);
+            padding: 12px;
+            background: #2a9d8f;
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 5px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.3s;
-            margin-bottom: 20px;
         }
         
         .submit-btn:hover {
             background: #21867a;
         }
         
-        .submit-btn:disabled {
-            background: var(--gray);
-            cursor: not-allowed;
-        }
-        
-        .form-footer {
-            text-align: center;
-            color: var(--gray);
-        }
-        
-        .form-footer a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .form-footer a:hover {
-            text-decoration: underline;
-        }
-        
-        .back-home {
-            position: absolute;
-            top: 20px;
-            left: 20px;
+        /* Footer */
+        footer {
+            background: #264653;
             color: white;
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e76f51;
+        }
+        
+        .footer-section a {
+            color: #ddd;
             text-decoration: none;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            transition: opacity 0.3s;
+            display: block;
+            margin-bottom: 8px;
         }
         
-        .back-home:hover {
-            opacity: 0.8;
+        .footer-section a:hover {
+            color: #e76f51;
         }
         
-        .back-home i {
-            margin-right: 8px;
+        .socials a {
+            margin-right: 15px;
+            font-size: 20px;
         }
         
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .login-content {
-                grid-template-columns: 1fr;
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .login-box {
+                margin: 0 15px 40px;
+                padding: 25px;
             }
             
-            .login-image-section {
-                display: none;
-            }
-            
-            .login-form-section {
-                padding: 40px 30px;
-            }
-            
-            .role-selection {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-tabs {
+            .header-content {
                 flex-direction: column;
-            }
-            
-            .tab-button {
-                border-bottom: none;
-                border-right: 3px solid transparent;
-            }
-            
-            .tab-button.active {
-                border-bottom: none;
-                border-right-color: var(--primary);
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .login-form-section {
-                padding: 30px 20px;
-            }
-            
-            .form-header h2 {
-                font-size: 24px;
+                text-align: center;
             }
             
             .logo {
-                font-size: 28px;
+                justify-content: center;
+                margin-bottom: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <a href="../index.html" class="back-home">
-        <i class="fas fa-arrow-left"></i>
-        Back to Home
-    </a>
-    
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <i class="fas fa-recycle"></i>
-                ThriftVibe
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-recycle"></i>
+                    <a href="../index.php">ThriftVibe</a>
+                </div>
+                <div></div>
             </div>
-            <p>Welcome back! Please sign in to your account</p>
         </div>
         
-        <div class="login-container">
-            <div class="login-content">
-                <div class="login-form-section">
-                    <div class="form-header">
-                        <h2>Sign In</h2>
-                        <p>Access your account to continue shopping</p>
+        <!-- Navigation -->
+        <nav>
+            <div class="container">
+                <ul class="nav-links">
+                    <li><a href="../index.php"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="products.php"><i class="fas fa-tshirt"></i> Products</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Login/Signup Form -->
+    <div class="container">
+        <div class="login-box">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <h2 style="color: #264653; margin-bottom: 8px;">Welcome to ThriftVibe</h2>
+                <p style="color: #6c757d;">Login or create an account to continue</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('login')">Login</button>
+                <button class="tab-btn" onclick="showTab('register')">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" action="login.php" method="post" style="display: block;">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-input" placeholder="Enter your password" required>
+                </div>
+
+                <input type="hidden" name="role" id="loginRole">
+
+                <div class="roles">
+                    <div class="role-option" onclick="selectRole('login', 'customer')">
+                        <i class="fas fa-user role-icon"></i>
+                        <div class="role-title">Customer</div>
+                        <div class="role-desc">Shop and browse</div>
                     </div>
-                    
-                    <div class="form-tabs">
-                        <button class="tab-button active" onclick="switchTab('login')">Login</button>
-                        <button class="tab-button" onclick="switchTab('register')">Sign Up</button>
-                    </div>
-                    
-                    <!-- Login Form -->
-                    <div id="login-tab" class="tab-content active">
-                        <form id="loginForm">
-                            <div class="form-group">
-                                <label for="loginEmail">Email Address</label>
-                                <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="loginPassword">Password</label>
-                                <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
-                            </div>
-                            
-                            <div class="role-selection">
-                                <div class="role-option" onclick="selectRole('user')">
-                                    <i class="fas fa-user"></i>
-                                    <h4>Customer</h4>
-                                    <p>Shop and browse products</p>
-                                </div>
-                                <div class="role-option" onclick="selectRole('admin')">
-                                    <i class="fas fa-user-shield"></i>
-                                    <h4>Admin</h4>
-                                    <p>Manage store and inventory</p>
-                                </div>
-                            </div>
-                            
-                            <button type="submit" class="submit-btn" id="loginSubmitBtn">Sign In</button>
-                        </form>
-                    </div>
-                    
-                    <!-- Register Form -->
-                    <div id="register-tab" class="tab-content">
-                        <form id="registerForm">
-                            <div class="form-group">
-                                <label for="registerName">Full Name</label>
-                                <input type="text" id="registerName" class="form-control" placeholder="Enter your full name" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="registerEmail">Email Address</label>
-                                <input type="email" id="registerEmail" class="form-control" placeholder="Enter your email" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="registerPassword">Password</label>
-                                <input type="password" id="registerPassword" class="form-control" placeholder="Create a password" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="confirmPassword">Confirm Password</label>
-                                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password" required>
-                            </div>
-                            
-                            <div class="role-selection">
-                                <div class="role-option" onclick="selectRole('user')">
-                                    <i class="fas fa-user"></i>
-                                    <h4>Customer</h4>
-                                    <p>Shop and browse products</p>
-                                </div>
-                                <div class="role-option" onclick="selectRole('admin')">
-                                    <i class="fas fa-user-shield"></i>
-                                    <h4>Admin</h4>
-                                    <p>Manage store and inventory</p>
-                                </div>
-                            </div>
-                            
-                            <button type="submit" class="submit-btn" id="registerSubmitBtn">Create Account</button>
-                        </form>
-                    </div>
-                    
-                    <div class="form-footer">
-                        <p id="formFooterText">Don't have an account? <a href="#" onclick="switchTab('register')">Sign up here</a></p>
+                    <div class="role-option" onclick="selectRole('login', 'seller')">
+                        <i class="fas fa-user-shield role-icon"></i>
+                        <div class="role-title">Seller</div>
+                        <div class="role-desc">Manage store</div>
                     </div>
                 </div>
-                
-                <div class="login-image-section">
-                    <div class="login-image-content">
-                        <h2>Join Our Community</h2>
-                        <p>Discover amazing secondhand fashion finds while making a positive impact on the environment</p>
+
+                <button type="submit" name="loginConfirm" class="submit-btn">Sign In</button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" action="signup.php" method="post" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="f_name" class="form-input" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-input" placeholder="Create a password" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" name="regConfirm" class="form-input" placeholder="Confirm your password" required>
+                </div>
+
+                <input type="hidden" name="role" id="registerRole">
+
+                <div class="roles">
+                    <div class="role-option" onclick="selectRole('register', 'customer')">
+                        <i class="fas fa-user role-icon"></i>
+                        <div class="role-title">Customer</div>
+                        <div class="role-desc">Shop and browse</div>
+                    </div>
+                    <div class="role-option" onclick="selectRole('register', 'seller')">
+                        <i class="fas fa-user-shield role-icon"></i>
+                        <div class="role-title">Seller</div>
+                        <div class="role-desc">Manage store</div>
                     </div>
                 </div>
+
+                <button type="submit" name="regConfirm" class="submit-btn">Create Account</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 18px; color: #6c757d;">
+                <p>Don't have an account? <a href="#" onclick="showTab('register')" style="color: #2a9d8f; text-decoration: none; font-weight: 600;">Sign up here</a></p>
             </div>
         </div>
     </div>
 
-    <script>
-        let selectedRole = null;
-        let currentTab = 'login';
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            setupForms();
-        });
-
-        // Switch between login and register tabs
-        function switchTab(tab) {
-            currentTab = tab;
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <p>ThriftVibe provides quality secondhand fashion while promoting sustainable shopping.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="../index.php">Home</a>
+                    <a href="products.php">Products</a>
+                    <a href="about.html">About</a>
+                    <a href="login.php">Login</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Patan, Lalitpur</p>
+                    <p><i class="fas fa-phone"></i> 9876543210</p>
+                    <p><i class="fas fa-envelope"></i> info@thriftvibe.com</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="socials">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
             
-            // Update tab buttons
-            document.querySelectorAll('.tab-button').forEach(btn => {
+            <div class="copyright">
+                <p>&copy; 2023 ThriftVibe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Show selected tab
+        function showTab(tabName) {
+            // Hide all forms
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'none';
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
             
-            // Update tab content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(tab + '-tab').classList.add('active');
-            
-            // Update footer text
-            const footerText = document.getElementById('formFooterText');
-            if (tab === 'login') {
-                footerText.innerHTML = 'Don\'t have an account? <a href="#" onclick="switchTab(\'register\')">Sign up here</a>';
+            // Show selected form
+            if (tabName === 'login') {
+                document.getElementById('loginForm').style.display = 'block';
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.querySelector('.login-box p').innerHTML = 'Don\'t have an account? <a href="#" onclick="showTab(\'register\')" style="color: #2a9d8f; text-decoration: none; font-weight: 600;">Sign up here</a>';
             } else {
-                footerText.innerHTML = 'Already have an account? <a href="#" onclick="switchTab(\'login\')">Sign in here</a>';
+                document.getElementById('registerForm').style.display = 'block';
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.querySelector('.login-box p').innerHTML = 'Already have an account? <a href="#" onclick="showTab(\'login\')" style="color: #2a9d8f; text-decoration: none; font-weight: 600;">Login here</a>';
             }
-        }
-
-        // Select user role
-        function selectRole(role) {
-            selectedRole = role;
             
-            // Update visual selection
-            document.querySelectorAll('.role-option').forEach(option => {
+            // Clear role selection
+            clearRoles(tabName);
+        }
+        
+        // Select role
+        function selectRole(formType, role) {
+            const options = document.querySelectorAll(`#${formType}Form .role-option`);
+            const hiddenInput = document.getElementById(`${formType}Role`);
+            
+            options.forEach(option => {
                 option.classList.remove('selected');
             });
-            event.target.closest('.role-option').classList.add('selected');
-        }
-
-        // Setup forms
-        function setupForms() {
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
             
-            loginForm.addEventListener('submit', handleLogin);
-            registerForm.addEventListener('submit', handleRegister);
-        }
-
-        // Handle login
-        function handleLogin(e) {
-            e.preventDefault();
-            
-            if (!selectedRole) {
-                alert('Please select your role (Customer or Admin)');
-                return;
-            }
-            
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            // Simple validation
-            if (!email || !password) {
-                alert('Please fill in all fields');
-                return;
-            }
-            
-            // Simulate login process
-            const submitBtn = document.getElementById('loginSubmitBtn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Signing In...';
-            
-            setTimeout(() => {
-                // Store user info in localStorage
-                const userInfo = {
-                    email: email,
-                    role: selectedRole,
-                    loginTime: new Date().toISOString()
-                };
-                localStorage.setItem('thriftvibe_user', JSON.stringify(userInfo));
-                
-                // Redirect based on role
-                if (selectedRole === 'admin') {
-                    window.location.href = 'admin-dashboard.html';
-                } else {
-                    window.location.href = 'user-dashboard.html';
+            // Find and select the clicked option
+            options.forEach(option => {
+                if (option.querySelector('.role-title').textContent.toLowerCase() === role) {
+                    option.classList.add('selected');
+                    hiddenInput.value = role;
                 }
-            }, 1500);
+            });
         }
-
-        // Handle registration
-        function handleRegister(e) {
-            e.preventDefault();
+        
+        // Clear role selection
+        function clearRoles(formType) {
+            const options = document.querySelectorAll(`#${formType}Form .role-option`);
+            const hiddenInput = document.getElementById(`${formType}Role`);
             
-            if (!selectedRole) {
-                alert('Please select your role (Customer or Admin)');
-                return;
-            }
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
             
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            hiddenInput.value = '';
+        }
+        
+        // Form validation
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const email = this.querySelector('input[name="email"]').value.trim();
+            const password = this.querySelector('input[name="password"]').value;
+            const role = document.getElementById('loginRole').value;
             
-            // Simple validation
-            if (!name || !email || !password || !confirmPassword) {
+            if (!email || !password) {
+                e.preventDefault();
                 alert('Please fill in all fields');
                 return;
             }
             
-            if (password !== confirmPassword) {
+            if (!role) {
+                e.preventDefault();
+                alert('Please select your role (Customer or Seller)');
+                return;
+            }
+            
+            this.querySelector('.submit-btn').disabled = true;
+            this.querySelector('.submit-btn').textContent = 'Signing In...';
+        });
+        
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const name = this.querySelector('input[name="f_name"]').value.trim();
+            const email = this.querySelector('input[name="email"]').value.trim();
+            const password = this.querySelector('input[name="password"]').value;
+            const confirmPass = this.querySelector('input[name="regConfirm"]').value;
+            const role = document.getElementById('registerRole').value;
+            
+            if (!name || !email || !password || !confirmPass) {
+                e.preventDefault();
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if (password !== confirmPass) {
+                e.preventDefault();
                 alert('Passwords do not match');
                 return;
             }
             
             if (password.length < 6) {
-                alert('Password must be at least 6 characters long');
+                e.preventDefault();
+                alert('Password must be at least 6 characters');
                 return;
             }
             
-            // Simulate registration process
-            const submitBtn = document.getElementById('registerSubmitBtn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Creating Account...';
+            if (!role) {
+                e.preventDefault();
+                alert('Please select your role (Customer or Seller)');
+                return;
+            }
             
-            setTimeout(() => {
-                // Store user info in localStorage
-                const userInfo = {
-                    name: name,
-                    email: email,
-                    role: selectedRole,
-                    registrationTime: new Date().toISOString()
-                };
-                localStorage.setItem('thriftvibe_user', JSON.stringify(userInfo));
-                
-                alert('Account created successfully! Redirecting to dashboard...');
-                
-                // Redirect based on role
-                if (selectedRole === 'admin') {
-                    window.location.href = 'admin-dashboard.html';
-                } else {
-                    window.location.href = 'user-dashboard.html';
-                }
-            }, 1500);
-        }
+            this.querySelector('.submit-btn').disabled = true;
+            this.querySelector('.submit-btn').textContent = 'Creating Account...';
+        });
     </script>
-    <script src="../script.js"></script>
 </body>
 </html>
