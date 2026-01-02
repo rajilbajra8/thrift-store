@@ -1,76 +1,89 @@
 <?php
-session_start();
 require_once "db.php";
 
-// DEBUG: Check if POST is received
-// echo "<pre>"; print_r($_POST); echo "</pre>";
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-    // Get form data safely
-    $f_name   = trim($_POST["f_name"] ?? "");
-    $email    = trim($_POST["email"] ?? "");
-    $password = trim($_POST["password"] ?? "");
-    $confirm  = trim($_POST["regConfirm"] ?? "");
-    $role     = strtolower(trim($_POST["role"] ?? "customer"));
-
-    // DEBUG: Show role received
-    // echo "Role received: $role<br>";
-
-    // Allowed roles
-    $allowed_roles = ["customer", "seller", "staff"];
-    if (!in_array($role, $allowed_roles)) {
-        $role = "customer"; 
-        // echo "Role fixed to default: customer<br>";
-    }
-
-    // Basic validations
-    if (empty($f_name) || empty($email) || empty($password) || empty($confirm)) {
-        die("Please fill in all fields.");
-    }
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) die("Invalid email.");
-    if ($password !== $confirm) die("Passwords do not match.");
-    if (strlen($password) < 6) die("Password too short.");
-
-    // Email check
-    $checkStmt = $conn->prepare("SELECT email FROM user WHERE email=?");
-    $checkStmt->bind_param("s", $email);
-    $checkStmt->execute();
-    $res = $checkStmt->get_result();
-
-    if ($res->num_rows > 0) die("Email already registered.");
-
-    // Hash password
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-    // Insert user
-    $stmt = $conn->prepare("INSERT INTO user (f_name, email, password, role) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $f_name, $email, $hashed_password, $role);
-
-    if ($stmt->execute()) {
-
-        // Save session
-        $_SESSION["user_id"] = $stmt->insert_id;
-        $_SESSION["user_name"] = $f_name;
-        $_SESSION["role"] = $role;
-
-        // FINAL REDIRECT
-        if ($role === "seller") {
-            // echo "Redirecting seller..."; // DEBUG
-            header("Location: Seller-dashboard.php");
-        } 
-        else if ($role === "staff") {
-            // echo "Redirecting staff..."; // DEBUG
-            header("Location: staff-dashboard.html");
-        } 
-        else {
-            // echo "Redirecting customer..."; // DEBUG
-            header("Location: user-dashboard.php");
-        }
-
-        exit;
-    } else {
-        die("DB Error: " . $stmt->error);
-    }
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    header("Location: login.html");
+    exit();
 }
+
+// Get form data
+$f_name = trim($_POST["f_name"] ?? "");
+$l_name = trim($_POST["l_name"] ?? "");
+$email = trim($_POST["email"] ?? "");
+$password = $_POST["password"] ?? "";
+$confirm_password = $_POST["confirm_password"] ?? "";
+$role = $_POST["role"] ?? "customer";
+
+// Validation
+$errors = [];
+
+if (empty($f_name)) $errors[] = "First name is required.";
+if (empty($l_name)) $errors[] = "Last name is required.";
+if (empty($email)) {
+    $errors[] = "Email is required.";
+} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors[] = "Invalid email format.";
+}
+if (empty($password)) {
+    $errors[] = "Password is required.";
+} elseif (strlen($password) < 6) {
+    $errors[] = "Password must be at least 6 characters.";
+}
+if (empty($confirm_password)) {
+    $errors[] = "Please confirm your password.";
+} elseif ($password !== $confirm_password) {
+    $errors[] = "Passwords do not match.";
+}
+
+// If there are validation errors, show them
+if (!empty($errors)) {
+    echo "<script>";
+    echo "alert('" . addslashes(implode("\\n", $errors)) . "');";
+    echo "window.history.back();";
+    echo "</script>";
+    exit();
+}
+
+// Check if email already exists
+$checkStmt = $conn->prepare("SELECT user_id FROM user WHERE email = ?");
+$checkStmt->bind_param("s", $email);
+$checkStmt->execute();
+$checkResult = $checkStmt->get_result();
+
+if ($checkResult->num_rows > 0) {
+    echo "<script>";
+    echo "alert('Email already registered. Please use a different email or login.');";
+    echo "window.history.back();";
+    echo "</script>";
+    $checkStmt->close();
+    exit();
+}
+$checkStmt->close();
+
+// Hash password
+$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+// Insert new user
+$stmt = $conn->prepare("INSERT INTO user (f_name, l_name, email, password, role, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
+if (!$stmt) {
+    die("Server error: " . $conn->error);
+}
+
+$stmt->bind_param("sssss", $f_name, $l_name, $email, $hashedPassword, $role);
+
+if ($stmt->execute()) {
+    $stmt->close();
+    
+    echo "<script>";
+    echo "alert('Registration successful! You can now login with your credentials.');";
+    echo "window.location.href = 'login.html';";
+    echo "</script>";
+} else {
+    echo "<script>";
+    echo "alert('Registration failed. Please try again.');";
+    echo "window.history.back();";
+    echo "</script>";
+}
+
+$conn->close();
 ?>

@@ -6,7 +6,7 @@ require_once "pages/db.php";
 $query = "SELECT item_id, name, category, price, image_url, description 
           FROM items 
           ORDER BY created_at DESC 
-          LIMIT 8";
+          LIMIT 3";
 $result = $conn->query($query);
 $products = [];
 if ($result) {
@@ -35,9 +35,11 @@ if ($result) {
                 </div>
                 
                 <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Search for clothes, shoes, accessories...">
-                    <button id="searchButton"><i class="fas fa-search"></i> Search</button>
-                </div>
+    <form method="GET" action="pages/products.php" id="searchForm" style="all: unset; display: contents;">
+        <input type="text" id="searchInput" name="search" placeholder="Search for clothes, shoes, accessories...">
+        <button type="submit" id="searchButton"><i class="fas fa-search"></i> Search</button>
+    </form>
+</div>
                 
                 <div class="user-actions">
                     <a href="pages/cart.php" id="cartButton">
@@ -146,6 +148,3 @@ if ($result) {
     <script src="script.js"></script>
 </body>
 </html>
-
-
-

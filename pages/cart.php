@@ -64,40 +64,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $itemId = (int) ($_POST['item_id'] ?? 0);
         $quantity = max(1, (int) ($_POST['quantity'] ?? 1));
 
-        $itemStmt = $conn->prepare("SELECT item_id FROM items WHERE item_id = ? LIMIT 1");
+        // Check stock quantity before adding
+        $itemStmt = $conn->prepare("SELECT stock_quantity FROM items WHERE item_id = ? LIMIT 1");
         if ($itemStmt) {
             $itemStmt->bind_param("i", $itemId);
             $itemStmt->execute();
-            $itemStmt->store_result();
-            if ($itemStmt->num_rows === 0) {
+            $result = $itemStmt->get_result();
+            if ($result && $row = $result->fetch_assoc()) {
+                $availableStock = $row['stock_quantity'];
+                
+                // Check if item is out of stock
+                if ($availableStock <= 0) {
+                    setCartFlash('error', 'This item is out of stock.');
+                    redirectBack();
+                }
+                
+                // Check if we're trying to add more than available
+                if ($quantity > $availableStock) {
+                    setCartFlash('error', "Only $availableStock item(s) available in stock.");
+                    redirectBack();
+                }
+                
+                // Check existing quantity in cart
+                $existing = $conn->prepare("SELECT cart_item_id, quantity FROM cart_item WHERE cart_id = ? AND item_id = ? LIMIT 1");
+                if ($existing) {
+                    $existing->bind_param("ii", $cartId, $itemId);
+                    $existing->execute();
+                    $result2 = $existing->get_result();
+                    if ($result2 && $row2 = $result2->fetch_assoc()) {
+                        // Check total quantity (existing + new)
+                        $totalQuantity = $row2['quantity'] + $quantity;
+                        if ($totalQuantity > $availableStock) {
+                            setCartFlash('error', "Only $availableStock item(s) available. You already have {$row2['quantity']} in cart.");
+                            redirectBack();
+                        }
+                        
+                        // Update quantity
+                        $newQuantity = $row2['quantity'] + $quantity;
+                        $update = $conn->prepare("UPDATE cart_item SET quantity = ? WHERE cart_item_id = ?");
+                        if ($update) {
+                            $update->bind_param("ii", $newQuantity, $row2['cart_item_id']);
+                            $update->execute();
+                            $update->close();
+                        }
+                    } else {
+                        // Add new item to cart
+                        $insert = $conn->prepare("INSERT INTO cart_item (cart_id, item_id, quantity) VALUES (?, ?, ?)");
+                        if ($insert) {
+                            $insert->bind_param("iii", $cartId, $itemId, $quantity);
+                            $insert->execute();
+                            $insert->close();
+                        }
+                    }
+                    $existing->close();
+                }
+            } else {
                 setCartFlash('error', 'Selected product is unavailable.');
                 redirectBack();
             }
             $itemStmt->close();
-        }
-
-        $existing = $conn->prepare("SELECT cart_item_id, quantity FROM cart_item WHERE cart_id = ? AND item_id = ? LIMIT 1");
-        if ($existing) {
-            $existing->bind_param("ii", $cartId, $itemId);
-            $existing->execute();
-            $result = $existing->get_result();
-            if ($result && $row = $result->fetch_assoc()) {
-                $newQuantity = $row['quantity'] + $quantity;
-                $update = $conn->prepare("UPDATE cart_item SET quantity = ? WHERE cart_item_id = ?");
-                if ($update) {
-                    $update->bind_param("ii", $newQuantity, $row['cart_item_id']);
-                    $update->execute();
-                    $update->close();
-                }
-            } else {
-                $insert = $conn->prepare("INSERT INTO cart_item (cart_id, item_id, quantity) VALUES (?, ?, ?)");
-                if ($insert) {
-                    $insert->bind_param("iii", $cartId, $itemId, $quantity);
-                    $insert->execute();
-                    $insert->close();
-                }
-            }
-            $existing->close();
         }
 
         setCartFlash('success', 'Item added to your cart.');
@@ -107,6 +132,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'update_item') {
         $cartItemId = (int) ($_POST['cart_item_id'] ?? 0);
         $quantity = max(1, (int) ($_POST['quantity'] ?? 1));
+
+        // Check stock before updating
+        $checkStmt = $conn->prepare("
+            SELECT it.stock_quantity 
+            FROM cart_item ci 
+            JOIN items it ON ci.item_id = it.item_id 
+            WHERE ci.cart_item_id = ?
+        ");
+        if ($checkStmt) {
+            $checkStmt->bind_param("i", $cartItemId);
+            $checkStmt->execute();
+            $result = $checkStmt->get_result();
+            if ($result && $row = $result->fetch_assoc()) {
+                if ($quantity > $row['stock_quantity']) {
+                    setCartFlash('error', "Only {$row['stock_quantity']} item(s) available in stock.");
+                    header("Location: cart.php");
+                    exit();
+                }
+            }
+            $checkStmt->close();
+        }
 
         $stmt = $conn->prepare("UPDATE cart_item SET quantity = ? WHERE cart_item_id = ? AND cart_id = ?");
         if ($stmt) {
@@ -142,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $cartItems = [];
 $cartSubtotal = 0.0;
 $cartItemStmt = $conn->prepare("
-    SELECT ci.cart_item_id, ci.quantity, it.item_id, it.name, it.category, it.price, it.image_url
+    SELECT ci.cart_item_id, ci.quantity, it.item_id, it.name, it.category, it.price, it.image_url, it.stock_quantity
     FROM cart_item ci
     JOIN items it ON ci.item_id = it.item_id
     WHERE ci.cart_id = ?
@@ -214,6 +260,7 @@ $grandTotal = $cartSubtotal + $tax;
         .alert { border-radius:8px; padding:12px 16px; margin-bottom:20px; }
         .alert-success { background:rgba(40,167,69,0.15); border:1px solid rgba(40,167,69,0.4); color:#1f5130; }
         .alert-error { background:rgba(220,53,69,0.15); border:1px solid rgba(220,53,69,0.4); color:#6e1b23; }
+        .stock-info { font-size:13px; color:var(--gray); margin-top:5px; }
         @media (max-width:992px) { .cart-content { grid-template-columns:1fr; } .summary-card { position:static; } }
         @media (max-width:600px) { .cart-item { flex-direction:column; } .item-actions { flex-direction:column; align-items:flex-start; } }
     </style>
@@ -274,19 +321,28 @@ $grandTotal = $cartSubtotal + $tax;
                     </div>
                 <?php else: ?>
                     <?php foreach ($cartItems as $item): ?>
-                        <?php $image = $item['image_url'] ?: 'https://via.placeholder.com/120x120?text=Thrift'; ?>
+                        <?php 
+                            $image = $item['image_url'] ?: 'https://via.placeholder.com/120x120?text=Thrift';
+                            $stockLeft = $item['stock_quantity'] - $item['quantity'];
+                            $stockClass = $stockLeft <= 0 ? 'style="color:red;"' : 'style="color:var(--gray);"';
+                        ?>
                         <div class="cart-item">
-                            <img src="<?php echo htmlspecialchars($image); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
+                            <img src="../<?php echo htmlspecialchars($image); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
                             <div class="item-info">
                                 <h3><?php echo htmlspecialchars($item['name']); ?></h3>
                                 <div class="item-meta"><?php echo htmlspecialchars(ucwords($item['category'] ?? '')); ?></div>
                                 <div style="font-weight:600;">Rs <?php echo number_format($item['price'], 2); ?></div>
+                                <div class="stock-info" <?php echo $stockClass; ?>>
+                                    Stock: <?php echo $item['stock_quantity']; ?> | 
+                                    In cart: <?php echo $item['quantity']; ?> | 
+                                    Left: <?php echo max(0, $stockLeft); ?>
+                                </div>
                             </div>
                             <div class="item-actions">
                                 <form method="post" style="display:flex; align-items:center; gap:10px;">
                                     <input type="hidden" name="action" value="update_item">
                                     <input type="hidden" name="cart_item_id" value="<?php echo $item['cart_item_id']; ?>">
-                                    <input type="number" name="quantity" min="1" value="<?php echo $item['quantity']; ?>">
+                                    <input type="number" name="quantity" min="1" max="<?php echo $item['stock_quantity']; ?>" value="<?php echo $item['quantity']; ?>">
                                     <button class="btn-outline" type="submit">Update</button>
                                 </form>
                                 <form method="post" onsubmit="return confirm('Remove this item?');">
@@ -319,14 +375,29 @@ $grandTotal = $cartSubtotal + $tax;
                     <span>Rs <?php echo number_format($grandTotal, 2); ?></span>
                 </div>
                 <div style="margin-top:20px;">
-                    <a href="checkout.php" class="btn-primary" style="text-decoration:none; display:block; text-align:center;">Proceed to Checkout</a>
+                    <?php if (!empty($cartItems)): ?>
+                        <a href="checkout.php" class="btn-primary" style="text-decoration:none; display:block; text-align:center;">Proceed to Checkout</a>
+                    <?php else: ?>
+                        <button class="btn-primary" disabled style="opacity:0.6;">Proceed to Checkout</button>
+                    <?php endif; ?>
                 </div>
                 <p style="font-size:13px; color:var(--gray); margin-top:12px;">Secure checkout powered by ThriftVibe.</p>
             </div>
         </div>
     </div>
 
-    <script src="../script.js"></script>
+    <script>
+        // Simple JavaScript to prevent adding more than stock
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('change', function() {
+                const max = parseInt(this.getAttribute('max'));
+                const value = parseInt(this.value);
+                if (value > max) {
+                    alert('Only ' + max + ' item(s) available in stock.');
+                    this.value = max;
+                }
+            });
+        });
+    </script>
 </body>
 </html>
-

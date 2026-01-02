@@ -2,7 +2,16 @@
 session_start();
 require_once "db.php";
 
+// ✅ ADD CHECKOUT SUCCESS CHECK
+$checkoutSuccess = false;
+$orderId = '';
+if (isset($_GET['checkout']) && $_GET['checkout'] === 'success') {
+    $checkoutSuccess = true;
+    $orderId = $_GET['order_id'] ?? '';
+}
+
 $isCustomer = isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'customer';
+$isSeller = isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'seller';
 $cartFlash = $_SESSION['cart_flash'] ?? null;
 unset($_SESSION['cart_flash']);
 
@@ -225,6 +234,31 @@ $currentPath = 'products.php' . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERV
             border: 1px solid rgba(220,53,69,0.4);
             color: #6e1b23;
         }
+        .checkout-success {
+            background: linear-gradient(135deg, rgba(40,167,69,0.2), rgba(40,167,69,0.1));
+            border: 2px solid rgba(40,167,69,0.4);
+            color: #1f5130;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(40,167,69,0.1);
+        }
+        .checkout-success h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #155724;
+        }
+        .checkout-success p {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .order-id {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0c4128;
+            margin: 10px 0;
+        }
         .products {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -333,6 +367,18 @@ $currentPath = 'products.php' . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERV
                 <?php echo htmlspecialchars($cartFlash['message']); ?>
             </div>
         <?php endif; ?>
+        
+        <!-- ✅ CHECKOUT SUCCESS MESSAGE -->
+        <?php if ($checkoutSuccess): ?>
+            <div class="checkout-success">
+                <h3><i class="fas fa-check-circle"></i> Checkout Successful!</h3>
+                <p>Thank you for your order! Your payment is confirmed and your items are being prepared.</p>
+                <?php if ($orderId): ?>
+                    <div class="order-id">Order ID: #<?php echo htmlspecialchars($orderId); ?></div>
+                <?php endif; ?>
+                <p><i class="fas fa-info-circle"></i> You will receive an email confirmation shortly. Keep shopping for more great finds!</p>
+            </div>
+        <?php endif; ?>
 
         <div class="filter-section">
             <form class="filter-form" method="get">
@@ -387,7 +433,7 @@ $currentPath = 'products.php' . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERV
                                         <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($currentPath); ?>">
                                         <button type="submit" class="buy-btn"><i class="fas fa-cart-plus"></i> Add to Cart</button>
                                     </form>
-                                <?php else: ?>
+                                <?php elseif (!$isSeller): ?>
                                     <a class="buy-link" href="login.html">Login to add</a>
                                 <?php endif; ?>
                             </div>
@@ -421,4 +467,3 @@ $currentPath = 'products.php' . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERV
     <script src="../script.js"></script>
 </body>
 </html>
-

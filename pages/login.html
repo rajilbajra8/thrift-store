@@ -12,7 +12,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        /* Header */
         header {
             background: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -48,7 +47,6 @@
             text-decoration: none;
         }
         
-        /* Navigation */
         nav {
             background: #264653;
             padding: 12px 0;
@@ -80,7 +78,6 @@
             background: rgba(255,255,255,0.1);
         }
         
-        /* Login Form */
         .login-box {
             background: white;
             border-radius: 15px;
@@ -90,7 +87,6 @@
             padding: 35px;
         }
         
-        /* Tabs */
         .tabs {
             display: flex;
             margin-bottom: 25px;
@@ -114,7 +110,6 @@
             color: #2a9d8f;
         }
         
-        /* Form */
         .form-group {
             margin-bottom: 18px;
         }
@@ -135,45 +130,12 @@
             font-size: 14px;
         }
         
-        /* Role Selection */
-        .roles {
+        .name-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 20px 0;
+            gap: 15px;
         }
         
-        .role-option {
-            padding: 12px;
-            border: 2px solid #eee;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-        }
-        
-        .role-option.selected {
-            border-color: #2a9d8f;
-            background: rgba(42,157,143,0.1);
-        }
-        
-        .role-icon {
-            font-size: 20px;
-            color: #2a9d8f;
-        }
-        
-        .role-title {
-            margin: 8px 0 4px;
-            color: #264653;
-            font-size: 14px;
-        }
-        
-        .role-desc {
-            margin: 0;
-            color: #6c757d;
-            font-size: 13px;
-        }
-        
-        /* Buttons */
         .submit-btn {
             width: 100%;
             padding: 12px;
@@ -191,7 +153,6 @@
             background: #21867a;
         }
         
-        /* Footer */
         footer {
             background: #264653;
             color: white;
@@ -234,7 +195,6 @@
             border-top: 1px solid rgba(255,255,255,0.1);
         }
         
-        /* Responsive */
         @media (max-width: 600px) {
             .login-box {
                 margin: 0 15px 40px;
@@ -250,11 +210,15 @@
                 justify-content: center;
                 margin-bottom: 10px;
             }
+            
+            .name-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
@@ -266,7 +230,6 @@
             </div>
         </div>
         
-        <!-- Navigation -->
         <nav>
             <div class="container">
                 <ul class="nav-links">
@@ -278,7 +241,6 @@
         </nav>
     </header>
 
-    <!-- Login/Signup Form -->
     <div class="container">
         <div class="login-box">
             <div style="text-align: center; margin-bottom: 25px;">
@@ -286,13 +248,11 @@
                 <p style="color: #6c757d;">Login or create an account to continue</p>
             </div>
 
-            <!-- Tabs -->
             <div class="tabs">
                 <button class="tab-btn active" onclick="showTab('login')">Login</button>
                 <button class="tab-btn" onclick="showTab('register')">Sign Up</button>
             </div>
 
-            <!-- Login Form -->
             <form id="loginForm" action="login.php" method="post" style="display: block;">
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
@@ -304,29 +264,20 @@
                     <input type="password" name="password" class="form-input" placeholder="Enter your password" required>
                 </div>
 
-                <input type="hidden" name="role" id="loginRole">
-
-                <div class="roles">
-                    <div class="role-option" onclick="selectRole('login', 'customer')">
-                        <i class="fas fa-user role-icon"></i>
-                        <div class="role-title">Customer</div>
-                        <div class="role-desc">Shop and browse</div>
-                    </div>
-                    <div class="role-option" onclick="selectRole('login', 'seller')">
-                        <i class="fas fa-user-shield role-icon"></i>
-                        <div class="role-title">Seller</div>
-                        <div class="role-desc">Manage store</div>
-                    </div>
-                </div>
-
                 <button type="submit" name="loginConfirm" class="submit-btn">Sign In</button>
             </form>
 
-            <!-- Register Form -->
             <form id="registerForm" action="signup.php" method="post" style="display: none;">
                 <div class="form-group">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" name="f_name" class="form-input" placeholder="Enter your full name" required>
+                    <label class="form-label">Name</label>
+                    <div class="name-row">
+                        <div>
+                            <input type="text" name="f_name" class="form-input" placeholder="First Name" required>
+                        </div>
+                        <div>
+                            <input type="text" name="l_name" class="form-input" placeholder="Last Name" required>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -341,34 +292,20 @@
 
                 <div class="form-group">
                     <label class="form-label">Confirm Password</label>
-                    <input type="password" name="regConfirm" class="form-input" placeholder="Confirm your password" required>
+                    <input type="password" name="confirm_password" class="form-input" placeholder="Confirm your password" required>
                 </div>
 
-                <input type="hidden" name="role" id="registerRole">
+                <input type="hidden" name="role" value="customer">
 
-                <div class="roles">
-                    <div class="role-option" onclick="selectRole('register', 'customer')">
-                        <i class="fas fa-user role-icon"></i>
-                        <div class="role-title">Customer</div>
-                        <div class="role-desc">Shop and browse</div>
-                    </div>
-                    <div class="role-option" onclick="selectRole('register', 'seller')">
-                        <i class="fas fa-user-shield role-icon"></i>
-                        <div class="role-title">Seller</div>
-                        <div class="role-desc">Manage store</div>
-                    </div>
-                </div>
-
-                <button type="submit" name="regConfirm" class="submit-btn">Create Account</button>
+                <button type="submit" name="register" class="submit-btn">Create Account</button>
             </form>
 
             <div style="text-align: center; margin-top: 18px; color: #6c757d;">
-                <p>Don't have an account? <a href="#" onclick="showTab('register')" style="color: #2a9d8f; text-decoration: none; font-weight: 600;">Sign up here</a></p>
+                <p id="switchText">Don't have an account? <a href="#" onclick="showTab('register')" style="color: #2a9d8f; text-decoration: none; font-weight: 600;">Sign up here</a></p>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -410,77 +347,32 @@
     </footer>
 
     <script>
-        // Show selected tab
         function showTab(tabName) {
-            // Hide all forms
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('registerForm').style.display = 'none';
             
-            // Remove active class from all tabs
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             
-            // Show selected form
             if (tabName === 'login') {
                 document.getElementById('loginForm').style.display = 'block';
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
-                document.querySelector('.login-box p').innerHTML = 'Don\'t have an account? <a href="#" onclick="showTab(\'register\')" style="color: #2a9d8f; text-decoration: none; font-weight: 600;">Sign up here</a>';
+                document.getElementById('switchText').innerHTML = 'Don\'t have an account? <a href="#" onclick="showTab(\'register\')" style="color: #2a9d8f; text-decoration: none; font-weight: 600;">Sign up here</a>';
             } else {
                 document.getElementById('registerForm').style.display = 'block';
                 document.querySelectorAll('.tab-btn')[1].classList.add('active');
-                document.querySelector('.login-box p').innerHTML = 'Already have an account? <a href="#" onclick="showTab(\'login\')" style="color: #2a9d8f; text-decoration: none; font-weight: 600;">Login here</a>';
+                document.getElementById('switchText').innerHTML = 'Already have an account? <a href="#" onclick="showTab(\'login\')" style="color: #2a9d8f; text-decoration: none; font-weight: 600;">Login here</a>';
             }
-            
-            // Clear role selection
-            clearRoles(tabName);
         }
         
-        // Select role
-        function selectRole(formType, role) {
-            const options = document.querySelectorAll(`#${formType}Form .role-option`);
-            const hiddenInput = document.getElementById(`${formType}Role`);
-            
-            options.forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            // Find and select the clicked option
-            options.forEach(option => {
-                if (option.querySelector('.role-title').textContent.toLowerCase() === role) {
-                    option.classList.add('selected');
-                    hiddenInput.value = role;
-                }
-            });
-        }
-        
-        // Clear role selection
-        function clearRoles(formType) {
-            const options = document.querySelectorAll(`#${formType}Form .role-option`);
-            const hiddenInput = document.getElementById(`${formType}Role`);
-            
-            options.forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            hiddenInput.value = '';
-        }
-        
-        // Form validation
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             const email = this.querySelector('input[name="email"]').value.trim();
             const password = this.querySelector('input[name="password"]').value;
-            const role = document.getElementById('loginRole').value;
             
             if (!email || !password) {
                 e.preventDefault();
                 alert('Please fill in all fields');
-                return;
-            }
-            
-            if (!role) {
-                e.preventDefault();
-                alert('Please select your role (Customer or Seller)');
                 return;
             }
             
@@ -489,13 +381,13 @@
         });
         
         document.getElementById('registerForm').addEventListener('submit', function(e) {
-            const name = this.querySelector('input[name="f_name"]').value.trim();
+            const firstName = this.querySelector('input[name="f_name"]').value.trim();
+            const lastName = this.querySelector('input[name="l_name"]').value.trim();
             const email = this.querySelector('input[name="email"]').value.trim();
             const password = this.querySelector('input[name="password"]').value;
-            const confirmPass = this.querySelector('input[name="regConfirm"]').value;
-            const role = document.getElementById('registerRole').value;
+            const confirmPass = this.querySelector('input[name="confirm_password"]').value;
             
-            if (!name || !email || !password || !confirmPass) {
+            if (!firstName || !lastName || !email || !password || !confirmPass) {
                 e.preventDefault();
                 alert('Please fill in all fields');
                 return;
@@ -510,12 +402,6 @@
             if (password.length < 6) {
                 e.preventDefault();
                 alert('Password must be at least 6 characters');
-                return;
-            }
-            
-            if (!role) {
-                e.preventDefault();
-                alert('Please select your role (Customer or Seller)');
                 return;
             }
             
