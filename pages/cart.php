@@ -3,7 +3,7 @@ session_start();
 require_once "db.php";
 
 if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'customer') {
-    header("Location: login.html");
+    header("Location: Seller-dashboard.php");
     exit();
 }
 
@@ -72,19 +72,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = $itemStmt->get_result();
             if ($result && $row = $result->fetch_assoc()) {
                 $availableStock = $row['stock_quantity'];
-                
+               
                 // Check if item is out of stock
                 if ($availableStock <= 0) {
                     setCartFlash('error', 'This item is out of stock.');
                     redirectBack();
                 }
-                
+               
                 // Check if we're trying to add more than available
                 if ($quantity > $availableStock) {
                     setCartFlash('error', "Only $availableStock item(s) available in stock.");
                     redirectBack();
                 }
-                
+               
                 // Check existing quantity in cart
                 $existing = $conn->prepare("SELECT cart_item_id, quantity FROM cart_item WHERE cart_id = ? AND item_id = ? LIMIT 1");
                 if ($existing) {
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             setCartFlash('error', "Only $availableStock item(s) available. You already have {$row2['quantity']} in cart.");
                             redirectBack();
                         }
-                        
+                       
                         // Update quantity
                         $newQuantity = $row2['quantity'] + $quantity;
                         $update = $conn->prepare("UPDATE cart_item SET quantity = ? WHERE cart_item_id = ?");
@@ -120,7 +120,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             } else {
                 setCartFlash('error', 'Selected product is unavailable.');
-                redirectBack();
             }
             $itemStmt->close();
         }
@@ -135,9 +134,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check stock before updating
         $checkStmt = $conn->prepare("
-            SELECT it.stock_quantity 
-            FROM cart_item ci 
-            JOIN items it ON ci.item_id = it.item_id 
+            SELECT it.stock_quantity
+            FROM cart_item ci
+            JOIN items it ON ci.item_id = it.item_id
             WHERE ci.cart_item_id = ?
         ");
         if ($checkStmt) {
@@ -208,8 +207,8 @@ if ($cartItemStmt) {
     $cartItemStmt->close();
 }
 
-$tax = $cartSubtotal * 0.05;
-$grandTotal = $cartSubtotal + $tax;
+// Removed tax calculation - total is just the subtotal
+$grandTotal = $cartSubtotal;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -247,7 +246,6 @@ $grandTotal = $cartSubtotal + $tax;
         .item-info h3 { margin-bottom:6px; }
         .item-meta { color:var(--gray); font-size:14px; margin-bottom:10px; }
         .item-actions { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-        .item-actions input[type="number"] { width:80px; padding:6px 10px; border:1px solid #ccc; border-radius:6px; }
         .item-actions button { border:none; cursor:pointer; border-radius:6px; padding:8px 14px; }
         .btn-outline { border:1px solid #ddd; background:#fff; }
         .btn-danger { background:var(--secondary); color:#fff; }
@@ -261,6 +259,16 @@ $grandTotal = $cartSubtotal + $tax;
         .alert-success { background:rgba(40,167,69,0.15); border:1px solid rgba(40,167,69,0.4); color:#1f5130; }
         .alert-error { background:rgba(220,53,69,0.15); border:1px solid rgba(220,53,69,0.4); color:#6e1b23; }
         .stock-info { font-size:13px; color:var(--gray); margin-top:5px; }
+        .quantity-display { 
+            font-weight:600; 
+            font-size:16px; 
+            padding:8px 15px; 
+            background:#f8f9fa; 
+            border-radius:6px;
+            border:1px solid #ddd;
+            min-width: 80px;
+            text-align: center;
+        }
         @media (max-width:992px) { .cart-content { grid-template-columns:1fr; } .summary-card { position:static; } }
         @media (max-width:600px) { .cart-item { flex-direction:column; } .item-actions { flex-direction:column; align-items:flex-start; } }
     </style>
@@ -271,7 +279,7 @@ $grandTotal = $cartSubtotal + $tax;
             <div class="header-content">
                 <div class="logo">
                     <i class="fas fa-recycle"></i>
-                    <a href="../index.html" style="text-decoration:none;color:inherit;">ThriftVibe</a>
+                    <a href="../index.php" style="text-decoration:none;color:inherit;">ThriftVibe</a>
                 </div>
                 <div class="user-actions">
                     <a href="cart.php">
@@ -279,14 +287,14 @@ $grandTotal = $cartSubtotal + $tax;
                         <span>Cart</span>
                         <span class="cart-count" id="cartCount"><?php echo array_sum(array_column($cartItems, 'quantity')); ?></span>
                     </a>
-                    <a href="login.html" class="login-btn"><i class="fas fa-user"></i> <span>Login</span></a>
+                    <a href="user-dashboard.php" class="login-btn"><i class="fas fa-user"></i> <span>My Account</span></a>
                 </div>
             </div>
         </div>
         <nav>
             <div class="container">
                 <ul class="nav-links">
-                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../index.php">Home</a></li>
                     <li><a href="products.php">Products</a></li>
                     <li><a href="cart.php" class="active">Cart</a></li>
                     <li><a href="user-dashboard.php">Dashboard</a></li>
@@ -317,11 +325,11 @@ $grandTotal = $cartSubtotal + $tax;
                 <?php if (empty($cartItems)): ?>
                     <div class="empty-state">
                         <p>Your cart is empty. Browse products to add items.</p>
-                        <a href="products.php" class="btn-primary" style="display:inline-block;width:auto;margin-top:15px;">Browse Products</a>
+                        <a href="products.php" class="btn-primary" style="display:inline-block;width:auto;padding:10px 20px;">Browse Products</a>
                     </div>
                 <?php else: ?>
                     <?php foreach ($cartItems as $item): ?>
-                        <?php 
+                        <?php
                             $image = $item['image_url'] ?: 'https://via.placeholder.com/120x120?text=Thrift';
                             $stockLeft = $item['stock_quantity'] - $item['quantity'];
                             $stockClass = $stockLeft <= 0 ? 'style="color:red;"' : 'style="color:var(--gray);"';
@@ -333,22 +341,22 @@ $grandTotal = $cartSubtotal + $tax;
                                 <div class="item-meta"><?php echo htmlspecialchars(ucwords($item['category'] ?? '')); ?></div>
                                 <div style="font-weight:600;">Rs <?php echo number_format($item['price'], 2); ?></div>
                                 <div class="stock-info" <?php echo $stockClass; ?>>
-                                    Stock: <?php echo $item['stock_quantity']; ?> | 
-                                    In cart: <?php echo $item['quantity']; ?> | 
+                                    Stock: <?php echo $item['stock_quantity']; ?> |
+                                    In cart: <?php echo $item['quantity']; ?> |
                                     Left: <?php echo max(0, $stockLeft); ?>
                                 </div>
                             </div>
                             <div class="item-actions">
-                                <form method="post" style="display:flex; align-items:center; gap:10px;">
-                                    <input type="hidden" name="action" value="update_item">
-                                    <input type="hidden" name="cart_item_id" value="<?php echo $item['cart_item_id']; ?>">
-                                    <input type="number" name="quantity" min="1" max="<?php echo $item['stock_quantity']; ?>" value="<?php echo $item['quantity']; ?>">
-                                    <button class="btn-outline" type="submit">Update</button>
-                                </form>
+                                <!-- Quantity Display Only (No Update Form) -->
+                                <div class="quantity-display">
+                                    Qty: <?php echo $item['quantity']; ?>
+                                </div>
+                                
+                                <!-- Remove Button -->
                                 <form method="post" onsubmit="return confirm('Remove this item?');">
                                     <input type="hidden" name="action" value="remove_item">
                                     <input type="hidden" name="cart_item_id" value="<?php echo $item['cart_item_id']; ?>">
-                                    <button class="btn-danger" type="submit"><i class="fas fa-trash"></i></button>
+                                    <button class="btn-danger" type="submit"><i class="fas fa-trash"></i> Remove</button>
                                 </form>
                             </div>
                             <div style="text-align:right;">
@@ -366,10 +374,9 @@ $grandTotal = $cartSubtotal + $tax;
                     <span>Subtotal</span>
                     <span>Rs <?php echo number_format($cartSubtotal, 2); ?></span>
                 </div>
-                <div class="summary-row">
-                    <span>Estimated tax (5%)</span>
-                    <span>Rs <?php echo number_format($tax, 2); ?></span>
-                </div>
+                
+                <!-- Removed tax row -->
+                
                 <div class="summary-total">
                     <span>Total</span>
                     <span>Rs <?php echo number_format($grandTotal, 2); ?></span>
@@ -386,18 +393,5 @@ $grandTotal = $cartSubtotal + $tax;
         </div>
     </div>
 
-    <script>
-        // Simple JavaScript to prevent adding more than stock
-        document.querySelectorAll('input[type="number"]').forEach(input => {
-            input.addEventListener('change', function() {
-                const max = parseInt(this.getAttribute('max'));
-                const value = parseInt(this.value);
-                if (value > max) {
-                    alert('Only ' + max + ' item(s) available in stock.');
-                    this.value = max;
-                }
-            });
-        });
-    </script>
 </body>
 </html>

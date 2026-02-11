@@ -53,8 +53,7 @@ $subtotal = 0.0;
 foreach ($cartItems as $item) {
     $subtotal += $item['price'] * $item['quantity'];
 }
-$tax = $subtotal * 0.05;
-$total = $subtotal + $tax;
+$total = $subtotal; // No tax
 
 // Handle form submission
 $errors = [];
@@ -261,9 +260,8 @@ input, textarea, select { width: 100%; padding: 8px; border: 1px solid #ccc; bor
                     
                     <div class="form-group">
                         <label>Payment Method</label>
-                        <select name="payment_method">
-                            <option value="cod">Cash on Delivery</option>
-                        </select>
+                        <input type="text" value="Cash on Delivery" readonly style="background: #f8f9fa;">
+                        <input type="hidden" name="payment_method" value="cod">
                     </div>
                     
                     <button type="submit" class="btn">Place Order</button>
@@ -282,11 +280,6 @@ input, textarea, select { width: 100%; padding: 8px; border: 1px solid #ccc; bor
                 <div class="summary-row">
                     <span>Subtotal</span>
                     <span>Rs <?php echo number_format($subtotal, 2); ?></span>
-                </div>
-                
-                <div class="summary-row">
-                    <span>Tax (5%)</span>
-                    <span>Rs <?php echo number_format($tax, 2); ?></span>
                 </div>
                 
                 <div class="summary-row total">

@@ -1,11 +1,11 @@
 <?php
 // Add at the very top of the file
 require_once "pages/db.php";
-
+global $role;
 // Get 8 latest products from database
-$query = "SELECT item_id, name, category, price, image_url, description 
-          FROM items 
-          ORDER BY created_at DESC 
+$query = "SELECT item_id, name, category, price, image_url, description
+          FROM items
+          ORDER BY created_at DESC
           LIMIT 3";
 $result = $conn->query($query);
 $products = [];
@@ -33,25 +33,25 @@ if ($result) {
                     <i class="fas fa-recycle"></i>
                     <a href="index.php">ThriftVibe</a>
                 </div>
-                
+               
                 <div class="search-bar">
     <form method="GET" action="pages/products.php" id="searchForm" style="all: unset; display: contents;">
         <input type="text" id="searchInput" name="search" placeholder="Search for clothes, shoes, accessories...">
         <button type="submit" id="searchButton"><i class="fas fa-search"></i> Search</button>
     </form>
 </div>
-                
+               
                 <div class="user-actions">
-                    <a href="pages/cart.php" id="cartButton">
-                        <i class="fas fa-shopping-cart"></i> 
-                        <span>Cart</span>
-                        <span class="cart-count" id="cartCount">0</span>
-                    </a>
-                    <a href="pages/login.php" class="login-btn"><i class="fas fa-user"></i> <span>Login</span></a>
+                        <a href="pages/cart.php" id="cartButton">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Cart</span>
+                            <span class="cart-count" id="cartCount">0</span>
+                        </a>
+                        <a href="pages/login.php" class="login-btn"><i class="fas fa-user"></i> <span>Login</span></a>
                 </div>
             </div>
         </div>
-        
+       
         <nav>
             <div class="container">
                 <ul class="nav-links">
@@ -62,7 +62,7 @@ if ($result) {
             </div>
         </nav>
     </header>
-    
+   
     <!-- Hero Section -->
     <section class="hero" id="home-section">
         <div class="hero-content">
@@ -71,15 +71,15 @@ if ($result) {
             <a href="pages/products.php" class="cta-btn">Shop Now</a>
         </div>
     </section>
-    
+   
     <!-- Products Section -->
 <section class="container" id="products-section">
-    <h2 class="section-title">Featured Items</h2>
-    
+    <h2 class="section-title">Latest Items</h2>
+   
     <div class="products" id="productsContainer">
             <!-- If database has products, show them dynamically -->
             <?php foreach ($products as $product): ?>
-                <?php 
+                <?php
                 // $product[];
                 $rawImage = trim($product['image_url'] ?? '');
                 if ($rawImage === '') {
@@ -102,7 +102,7 @@ if ($result) {
             <?php endforeach; ?>
     </div>
 </section>
-    
+   
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -111,7 +111,7 @@ if ($result) {
                     <h3>About Us</h3>
                     <p>ThriftVibe is dedicated to providing quality secondhand fashion while promoting sustainable shopping practices.</p>
                 </div>
-                
+               
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <a href="index.php">Home</a>
@@ -119,14 +119,14 @@ if ($result) {
                     <a href="pages/about.html">About</a>
                     <a href="pages/contact.html">Contact</a>
                 </div>
-                
+               
                 <div class="footer-section">
                     <h3>Contact Us</h3>
                     <p><i class="fas fa-map-marker-alt"></i> Patan,Lalitpur</p>
-                    <p><i class="fas fa-phone"></i> 987654310</p>
+                    <p><i class="fas fa-phone"></i> 9876543101</p>
                     <p><i class="fas fa-envelope"></i> info@thriftvibe.com</p>
                 </div>
-                
+               
                 <div class="footer-section">
                     <h3>Follow Us</h3>
                     <div class="socials">
@@ -137,7 +137,7 @@ if ($result) {
                     </div>
                 </div>
             </div>
-            
+           
             <div class="copyright">
                 <p>&copy; 2023 ThriftVibe. All rights reserved.</p>
             </div>
